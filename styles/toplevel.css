@@ -13,19 +13,23 @@ a {
 body {
   padding-left: 64px;
   padding-right: 64px;
-  padding-top: 10px;
+  padding-top: 120px;
   padding-bottom: 10px;
   background-color: #eee;
 }
 
 header {
+  position: fixed;
+  top: 10px;
+  left: 64px;
+  right: 64px;
   background-color: #fff;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 10px;
-  margin-top: 10px;
   border-radius: 100px;
+  z-index: 100;
 }
 
 .brand {
@@ -121,5 +125,127 @@ header {
   height: 100%;
   z-index: 40;
   background-image: linear-gradient(180deg, rgba(0, 0, 0, .2) 0%, rgba(0, 0, 0, .6) 100%);
+}
+
+.trails-section {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+}
+
+.trail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.trail-header h2 {
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  color: #444;
+}
+
+.trail-header p {
+  font-size: 16px;
+  font-weight: lighter;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  color: #444;
+}
+
+.trail-cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 24px;  
+}
+
+.trail-card {
+  flex: 1 1 300px;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #ddd;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trail-card:hover {
+  border-color: #aaa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.trail-card .trail-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
+}
+
+.trail-card:hover .trail-image {
+  transform: scale(1.08);
+}
+
+.trail-details {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trail-details h3 {
+  font-size: 18px;
+  font-weight: medium;
+  letter-spacing: 0.5px;
+  color: #555;
+}
+.trail-details p {
+  font-size: 14px;
+  font-weight: lighter;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.break {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px;
+  margin-top: 64px;
+  gap: 32px;
+  background-color: rgb(219, 226, 219);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.info-icon {
+  padding: 16px;
+  background-color: rgb(32, 74, 32);
+  color: white;
+  border-radius: 100%;
+}
+
+.info-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-details p{
+  text-align: center;
 }
 
