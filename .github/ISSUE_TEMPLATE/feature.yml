@@ -4,11 +4,11 @@ title: "[Product Backlog]: "
 labels: ["Product Backlog"]
 
 body:
-  - type: textarea
-    id: user_story
-    attributes:
-      label: User Story
-      description: As a user, I want..., so that...
+- type: textarea
+id: user_story
+attributes:
+label: User Story
+description: As a user, I want..., so that...
     validations:
       required: true
 
@@ -25,8 +25,8 @@ body:
     attributes:
       label: Acceptance Criteria
       placeholder:
-        - [ ] Requirement 1
-        - [ ] Requirement 2
+      - [ ] Requirement 1
+      - [ ] Requirement 2
     validations:
       required: true
 
