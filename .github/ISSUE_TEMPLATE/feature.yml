@@ -24,9 +24,9 @@ body:
     id: acceptance_criteria
     attributes:
       label: Acceptance Criteria
-      placeholder:
-       - [ ] Requirement 1
-       - [ ] Requirement 2
+      placeholder: |
+        - [ ] Requirement 1
+        - [ ] Requirement 2
     validations:
       required: true
 
