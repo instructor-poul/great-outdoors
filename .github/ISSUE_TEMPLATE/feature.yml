@@ -9,7 +9,7 @@ id: user_story
 attributes:
 label: User Story
 description: As a user, I want..., so that...
-    validations:
+validations:
       required: true
 
   - type: textarea
