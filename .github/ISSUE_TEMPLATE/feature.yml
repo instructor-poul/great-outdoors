@@ -2,14 +2,13 @@ name: Feature Issue
 description: Create a new feature (parent issue)
 title: "[Product Backlog]: "
 labels: ["Product Backlog"]
-
 body:
-- type: textarea
-id: user_story
-attributes:
-label: User Story
-description: As a user, I want..., so that...
-validations:
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User Story
+      description: "As a user, I want..., so that..."
+    validations:
       required: true
 
   - type: textarea
@@ -24,9 +23,9 @@ validations:
     id: acceptance_criteria
     attributes:
       label: Acceptance Criteria
-      placeholder:
-      - [ ] Requirement 1
-      - [ ] Requirement 2
+      placeholder: |
+        - [ ] Requirement 1
+        - [ ] Requirement 2
     validations:
       required: true
 
