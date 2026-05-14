@@ -15,6 +15,8 @@ The Great Outdoors is a project dedicated to helping people explore the Pacific 
 
 tryin to make a change :/
 
+aagin
+
 ## 🌱 Mission
 
 Founded in **2024**, **The Great Outdoors** aims to:
