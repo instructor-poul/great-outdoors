@@ -1,4 +1,4 @@
-# name: Task Issue
+name: Task Issue
 description: Create a development task (child of feature)
 title: "[TASK]: "
 labels: ["task"]
