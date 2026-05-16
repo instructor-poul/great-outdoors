@@ -1,1 +1,1 @@
-This repo has a main table of contents page with 6 shotcut links leading to 6 other pictures, when you hover over the images the trail name appears.git
+This repo has a main table of contents page, with 6 shortcut links leading to 6 other pictures, when you hover over the images the trail name appears
