@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trail</title>
+</head>
+<body>
+  <h1>PLACEHOLDER</h1>
+
+  <p id="status">Loading...</p>
+  <div id="content" style="display:none">
+    <h1 id="name"></h1>
+    <p id="org"></p>
+    <p id="type"></p>
+    <p id="length"></p>
+    <p id="gain"></p>
+    <p id="start-elev"></p>
+    <p id="est-time"></p>
+    <p id="roughness"></p>
+    <p id="hours"></p>
+    <p id="location"></p>
+    <p id="surfaces"></p>
+    <p id="biomes"></p>
+    <p id="description"></p>
+    <div id="images"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import firebaseConfig from "./trails.js";
+
+    const db = getFirestore(initializeApp(firebaseConfig));
+
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) { document.getElementById("status").textContent = "No trail ID in URL."; }
+
+    else {
+      const snap = await getDoc(doc(db, "trails", id));
+      if (!snap.exists()) { document.getElementById("status").textContent = "Trail not found."; }
+
+      else {
+        const t = snap.data();
+        document.title = t.name;
+        document.getElementById("status").style.display = "none";
+        document.getElementById("content").style.display = "";
+
+        document.getElementById("name").textContent        = t.name;
+        document.getElementById("org").textContent         = t.associated_org   ?? "";
+        document.getElementById("type").textContent        = "Type: "           + t.trail_type;
+        document.getElementById("length").textContent      = "Length: "         + t.length_mi        + " mi";
+        document.getElementById("gain").textContent        = "Elevation gain: " + t.elevation_gain   + " ft";
+        document.getElementById("start-elev").textContent  = t.start_elev_ft   ? "Starting elev: "  + t.start_elev_ft  + " ft" : "";
+        document.getElementById("est-time").textContent    = t.est_time_hr     ? "Est. time: "       + t.est_time_hr    + " hr (±50%)" : "";
+        document.getElementById("roughness").textContent   = t.roughness       ? "Roughness: "       + t.roughness      + "/10" : "";
+        document.getElementById("hours").textContent       = t.opening_hours   ? "Hours: "           + (t.opening_hours.open + "–" + t.opening_hours.close + " " + (t.opening_hours.notes ?? "")).trim() : "";
+        document.getElementById("location").textContent    = t.location        ? "Location: "        + t.location.latitude + ", " + t.location.longitude : "";
+        document.getElementById("surfaces").textContent    = t.surfaces?.length ? "Surfaces: "       + t.surfaces.join(", ") : "";
+        document.getElementById("biomes").textContent      = t.biomes?.length  ? "Biomes: "          + t.biomes.join(", ") : "";
+        document.getElementById("description").textContent = t.description     ?? "";
+
+        (t.images ?? []).forEach(url => {
+          const img = document.createElement("img");
+          img.src = url;
+          img.width = 300;
+          document.getElementById("images").appendChild(img);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
