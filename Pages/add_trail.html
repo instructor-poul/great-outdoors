@@ -44,11 +44,13 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, GeoPoint } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import firebaseConfig from "../Scripts/great_outdoors.js";
+    import { getFirestore, collection, addDoc, getDoc, setDoc, serverTimestamp, GeoPoint } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig, doc } from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
     const status = document.getElementById("status");
+    const f = document.getElementById("trail-form");
+
 
     document.getElementById("trail-form").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -87,13 +89,45 @@
       trail.updated_at = serverTimestamp();
 
       try {
-        const ref = await addDoc(collection(db, "trails"), trail);
-        status.textContent = "Trail added! ID: " + ref.id;
+        const editId = new URLSearchParams(window.location.search).get("edit");
+        if (editId) {
+          delete trail.created_at;
+          await setDoc(doc(db, "trails", editId), { ...trail, updated_at: serverTimestamp() }, { merge: true });
+          status.textContent = "Trail updated!";
+        } else {
+          const ref = await addDoc(collection(db, "trails"), trail);
+          status.textContent = "Trail added! ID: " + ref.id;
+        }
         e.target.reset();
       } catch (err) {
         status.textContent = "Error: " + err.message;
       }
     });
+
+    const editId = new URLSearchParams(window.location.search).get("edit");
+    if (editId) {
+      const snap = await getDoc(doc(db, "trails", editId));
+      if (snap.exists()) {
+        const t = snap.data();
+        f.name.value          = t.name ?? "";
+        f.length_mi.value     = t.length_mi ?? "";
+        f.elevation_gain.value= t.elevation_gain ?? "";
+        f.trail_type.value    = t.trail_type ?? "";
+        f.lat.value           = t.location?.latitude ?? "";
+        f.lng.value           = t.location?.longitude ?? "";
+        f.start_elev_ft.value = t.start_elev_ft ?? "";
+        f.roughness.value     = t.roughness ?? "";
+        f.hours_open.value    = t.opening_hours?.open ?? "";
+        f.hours_close.value   = t.opening_hours?.close ?? "";
+        f.hours_notes.value   = t.opening_hours?.notes ?? "";
+        f.est_time_hr.value   = t.est_time_hr ?? "";
+        f.description.value   = t.description ?? "";
+        f.associated_org.value= t.associated_org ?? "";
+        f.surfaces.value      = t.surfaces?.join(", ") ?? "";
+        f.biomes.value        = t.biomes?.join(", ") ?? "";
+        f.images.value        = t.images?.join("\n") ?? "";
+      }
+    }
   </script>
 </body>
 </html>

@@ -28,7 +28,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import firebaseConfig from "../Scripts/great_outdoors.js";
+    import { firebaseConfig, auth, onAuthStateChanged } from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
@@ -74,6 +74,16 @@
           img.width = 300;
           document.getElementById("images").appendChild(img);
         });
+
+        // Add edit button
+        const editBtn = document.createElement("a");
+        editBtn.textContent = "Edit Trail";
+        onAuthStateChanged(auth, (user) => {
+          editBtn.href = user
+            ? `add_trail.html?edit=${id}`
+            : `login.html?redirect=trail.html?id=${id}`;
+        });
+        document.getElementById("content").prepend(editBtn);
       }
     }
   </script>

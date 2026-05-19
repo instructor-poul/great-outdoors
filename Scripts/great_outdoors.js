@@ -23,8 +23,11 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+export { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+export { doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 // ── Re-use your existing firebaseConfig ──────────────────────
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyABZKs8MP6NwOjgnKB7qNdh11FOftnDxCk",
   authDomain: "great-outdoors-user-accounts.firebaseapp.com",
   projectId: "great-outdoors-user-accounts",
@@ -34,11 +37,9 @@ const firebaseConfig = {
   measurementId: "G-496BHP4EK8",
 };
 
-export default firebaseConfig;
-
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 // ── Collection reference ─────────────────────────────────────
 const TRAILS = collection(db, "trails");
@@ -301,12 +302,15 @@ window.login = function () {
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
       alert("Logged In!");
-      window.location.href = "dashboard.html";
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get("redirect");
+      window.location.href = redirect ?? "dashboard.html";
     })
     .catch((error) => {
       alert(error.message);
     });
 };
+
 
 
 // LOGOUT
