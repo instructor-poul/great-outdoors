@@ -1,7 +1,6 @@
-# ***Class Project***
+# Great Outdoors — Pacific Northwest Hiking Web App
 
-
-# The Great Outdoors 🌲
+## Project Purpose
 
 The Great Outdoors is a project dedicated to helping people explore the Pacific Northwest responsibly while protecting its natural landscapes.
 
@@ -24,10 +23,8 @@ Founded in **2024**, **The Great Outdoors** aims to:
 
 ## 🧭 Vision
 
-## Test
-
 By combining education, thoughtful design, and up-to-date trail data, The Great Outdoors seeks to create a more balanced, informed, and respectful outdoor community across the Pacific Northwest.
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the `LICENSE` file for details.
+This project was created for educational purposes as part of a collaborative software development course project.
