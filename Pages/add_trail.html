@@ -45,7 +45,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp, GeoPoint } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import firebaseConfig from "./trails.js";
+    import firebaseConfig from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
     const status = document.getElementById("status");

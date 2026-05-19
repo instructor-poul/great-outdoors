@@ -27,13 +27,22 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import firebaseConfig from "./trails.js";
+    import { getFirestore, doc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import firebaseConfig from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
     const id = new URLSearchParams(window.location.search).get("id");
-    if (!id) { document.getElementById("status").textContent = "No trail ID in URL."; }
+    if (!id) {
+      const snapshot = await getDocs(collection(db, "trails"));
+      const docs = snapshot.docs;
+      if (!docs.length) {
+        document.getElementById("status").textContent = "No trails found.";
+      } else {
+        const random = docs[Math.floor(Math.random() * docs.length)];
+        window.location.href = `trail.html?id=${random.id}`;
+      }
+    }
 
     else {
       const snap = await getDoc(doc(db, "trails", id));
