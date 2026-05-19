@@ -23,6 +23,7 @@
     <p id="biomes"></p>
     <p id="description"></p>
     <div id="images"></div>
+    <p id="edited"></p>
   </div>
 
   <script type="module">
@@ -67,6 +68,11 @@
         document.getElementById("surfaces").textContent    = t.surfaces?.length ? "Surfaces: "       + t.surfaces.join(", ") : "";
         document.getElementById("biomes").textContent      = t.biomes?.length  ? "Biomes: "          + t.biomes.join(", ") : "";
         document.getElementById("description").textContent = t.description     ?? "";
+
+        if (t.updated_by && t.updated_at) {
+          const date = t.updated_at.toDate().toLocaleDateString();
+          document.getElementById("edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
+        }
 
         (t.images ?? []).forEach(url => {
           const img = document.createElement("img");
