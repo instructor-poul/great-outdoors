@@ -24,12 +24,21 @@
     <p id="description"></p>
     <div id="images"></div>
     <p id="edited"></p>
+    <hr>
+    <h3>Comments</h3>
+    <div id="comments"></div>
+    <div id="comment-form" style="display:none">
+      <textarea id="comment-input" rows="3" cols="40" maxlength="1000" placeholder="Write a comment..."></textarea><br>
+      <button id="comment-submit">Post</button>
+    </div>
+    <p id="comment-login">You must be <a href="login.html">logged in</a> to comment.</p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, doc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { firebaseConfig, auth, onAuthStateChanged } from "../Scripts/great_outdoors.js";
+    import { getFirestore, doc, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { query, where, orderBy, addDoc, collection, firebaseConfig, onAuthStateChanged, auth } from "../Scripts/great_outdoors.js";
+    //import  from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
@@ -90,6 +99,46 @@
             : `login.html?redirect=trail.html?id=${id}`;
         });
         document.getElementById("content").prepend(editBtn);
+
+
+        // Load comments
+        const commentsDiv = document.getElementById("comments");
+        const q = query(collection(db, "comments"), where("trail_id", "==", id));//, orderBy("created_at", "asc"));
+        const commentSnap = await getDocs(q);
+        commentSnap.forEach(d => {
+          const c = d.data();
+          const p = document.createElement("p");
+          const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
+          p.textContent = `${c.email} (${date}): ${c.contents}`;
+          commentsDiv.appendChild(p);
+        });
+
+        // Show form or login prompt
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            document.getElementById("comment-form").style.display = "";
+            document.getElementById("comment-login").style.display = "none";
+            document.getElementById("comment-submit").addEventListener("click", async () => {
+              const contents = document.getElementById("comment-input").value.trim();
+              if (!contents) return;
+              await addDoc(collection(db, "comments"), {
+                trail_id:   id,
+                uid:        user.uid,
+                email:      user.email,
+                contents:   contents,
+                created_at: serverTimestamp(),
+              });
+              document.getElementById("comment-input").value = "";
+              // Reload comments
+              const p = document.createElement("p");
+              p.textContent = `${user.email} (just now): ${contents}`;
+              commentsDiv.appendChild(p);
+            });
+          } else {
+            document.getElementById("comment-form").style.display = "none";
+            document.getElementById("comment-login").style.display = "";
+          }
+        });
       }
     }
   </script>
