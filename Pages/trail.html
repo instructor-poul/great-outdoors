@@ -103,7 +103,7 @@
 
         // Load comments
         const commentsDiv = document.getElementById("comments");
-        const q = query(collection(db, "comments"), where("trail_id", "==", id));//, orderBy("created_at", "asc"));
+        const q = query(collection(db, "comments"), where("trail_id", "==", id), orderBy("created_at", "asc"));
         const commentSnap = await getDocs(q);
         commentSnap.forEach(d => {
           const c = d.data();
