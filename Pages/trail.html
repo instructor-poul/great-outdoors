@@ -23,12 +23,13 @@
     <p id="biomes"></p>
     <p id="description"></p>
     <div id="images"></div>
+    <p id="edited"></p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import firebaseConfig from "../Scripts/great_outdoors.js";
+    import { firebaseConfig, auth, onAuthStateChanged } from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
@@ -68,12 +69,27 @@
         document.getElementById("biomes").textContent      = t.biomes?.length  ? "Biomes: "          + t.biomes.join(", ") : "";
         document.getElementById("description").textContent = t.description     ?? "";
 
+        if (t.updated_by && t.updated_at) {
+          const date = t.updated_at.toDate().toLocaleDateString();
+          document.getElementById("edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
+        }
+
         (t.images ?? []).forEach(url => {
           const img = document.createElement("img");
           img.src = url;
           img.width = 300;
           document.getElementById("images").appendChild(img);
         });
+
+        // Add edit button
+        const editBtn = document.createElement("a");
+        editBtn.textContent = "Edit Trail";
+        onAuthStateChanged(auth, (user) => {
+          editBtn.href = user
+            ? `add_trail.html?edit=${id}`
+            : `login.html?redirect=trail.html?id=${id}`;
+        });
+        document.getElementById("content").prepend(editBtn);
       }
     }
   </script>
