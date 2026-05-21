@@ -5,10 +5,20 @@
   <title>Trail</title>
 </head>
 <body>
-  <h1>PLACEHOLDER</h1>
 
+  <!-- ═══════════════════════════════════════════════
+       STATIC STRUCTURE
+       Add/remove/rearrange elements here to change
+       what the page shows and in what order.
+  ════════════════════════════════════════════════ -->
   <p id="status">Loading...</p>
+
   <div id="content" style="display:none">
+
+    <!-- Trail actions -->
+    <a id="edit-trail-btn"></a>
+
+    <!-- Core info -->
     <h1 id="name"></h1>
     <p id="org"></p>
     <p id="type"></p>
@@ -22,9 +32,16 @@
     <p id="surfaces"></p>
     <p id="biomes"></p>
     <p id="description"></p>
+
+    <!-- Media -->
     <div id="images"></div>
-    <p id="edited"></p>
+
+    <!-- Metadata -->
+    <p id="last-edited"></p>
+
     <hr>
+
+    <!-- Comments -->
     <h3>Comments</h3>
     <div id="comments"></div>
     <div id="comment-form" style="display:none">
@@ -32,158 +49,196 @@
       <button id="comment-submit">Post</button>
     </div>
     <p id="comment-login">You must be <a href="login.html">logged in</a> to comment.</p>
+
   </div>
 
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, doc, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { query, where, orderBy, addDoc, updateDoc, deleteDoc, collection, firebaseConfig, onAuthStateChanged, auth } from "../Scripts/great_outdoors.js";
-    //import  from "../Scripts/great_outdoors.js";
+    import { initializeApp }                                          from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, getDocs, serverTimestamp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { query, where, orderBy, addDoc, updateDoc, deleteDoc,
+             collection, firebaseConfig, onAuthStateChanged, auth }  from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
 
+
+    // ═══════════════════════════════════════════════
+    //  RENDER FUNCTIONS
+    //  Change how things look by editing these.
+    // ════════════════════════════════════════════════
+
+    function renderTrail(t, id) {
+      document.title                                    = t.name;
+      document.getElementById("name").textContent       = t.name;
+      document.getElementById("org").textContent        = t.associated_org ?? "";
+      document.getElementById("type").textContent       = "Type: "           + t.trail_type;
+      document.getElementById("length").textContent     = "Length: "         + t.length_mi + " mi";
+      document.getElementById("gain").textContent       = "Elevation gain: " + t.elevation_gain + " ft";
+      document.getElementById("start-elev").textContent = t.start_elev_ft   ? "Starting elev: " + t.start_elev_ft + " ft" : "";
+      document.getElementById("est-time").textContent   = t.est_time_hr     ? "Est. time: "      + t.est_time_hr   + " hr (±50%)" : "";
+      document.getElementById("roughness").textContent  = t.roughness       ? "Roughness: "      + t.roughness     + "/10" : "";
+      document.getElementById("location").textContent   = t.location        ? "Location: "       + t.location.latitude + ", " + t.location.longitude : "";
+      document.getElementById("surfaces").textContent   = t.surfaces?.length ? "Surfaces: "      + t.surfaces.join(", ") : "";
+      document.getElementById("biomes").textContent     = t.biomes?.length  ? "Biomes: "         + t.biomes.join(", ") : "";
+      document.getElementById("description").textContent = t.description ?? "";
+
+      document.getElementById("hours").textContent = t.opening_hours
+        ? "Hours: " + (t.opening_hours.open + "–" + t.opening_hours.close + " " + (t.opening_hours.notes ?? "")).trim()
+        : "";
+
+      if (t.updated_by && t.updated_at) {
+        const date = t.updated_at.toDate().toLocaleDateString();
+        document.getElementById("last-edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
+      }
+
+      const imagesDiv = document.getElementById("images");
+      (t.images ?? []).forEach(url => {
+        const img = document.createElement("img");
+        img.src   = url;
+        img.width = 300;
+        imagesDiv.appendChild(img);
+      });
+    }
+
+    function renderEditButton(id, user) {
+      const btn  = document.getElementById("edit-trail-btn");
+      btn.textContent = "Edit Trail";
+      btn.href = user
+        ? `add_trail.html?edit=${id}`
+        : `login.html?redirect=trail.html?id=${id}`;
+    }
+
+    function renderComment(d, user, commentsDiv) {
+      const c    = d.data();
+      const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
+
+      const div = document.createElement("div");
+      div.id    = `comment-${d.id}`;
+
+      const p = document.createElement("p");
+      p.textContent = `${c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
+      div.appendChild(p);
+
+      if (user && user.uid === c.uid) {
+
+        const deleteBtn       = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", async () => {
+          await deleteDoc(doc(db, "comments", d.id));
+          div.remove();
+        });
+
+        const editBtn       = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.addEventListener("click", () => {
+          const input  = document.createElement("textarea");
+          input.value  = c.contents;
+          input.rows   = 3;
+          input.cols   = 40;
+
+          const saveBtn       = document.createElement("button");
+          saveBtn.textContent = "Save";
+          saveBtn.addEventListener("click", async () => {
+            const newText = input.value.trim();
+            if (!newText) return;
+            await updateDoc(doc(db, "comments", d.id), { contents: newText, edited: true });
+            p.textContent = `${c.email} (${date}) (edited): ${newText}`;
+            div.replaceChildren(p, deleteBtn, editBtn);
+          });
+
+          const cancelBtn       = document.createElement("button");
+          cancelBtn.textContent = "Cancel";
+          cancelBtn.addEventListener("click", () => {
+            div.replaceChildren(p, deleteBtn, editBtn);
+          });
+
+          div.replaceChildren(input, saveBtn, cancelBtn);
+        });
+
+        div.appendChild(deleteBtn);
+        div.appendChild(editBtn);
+      }
+
+      commentsDiv.appendChild(div);
+    }
+
+    function renderCommentForm(user, db, trailId, commentsDiv, q) {
+      if (user) {
+        document.getElementById("comment-form").style.display  = "";
+        document.getElementById("comment-login").style.display = "none";
+
+        document.getElementById("comment-submit").addEventListener("click", async () => {
+          const contents = document.getElementById("comment-input").value.trim();
+          if (!contents) return;
+
+          await addDoc(collection(db, "comments"), {
+            trail_id:   trailId,
+            uid:        user.uid,
+            email:      user.email,
+            contents:   contents,
+            created_at: serverTimestamp(),
+          });
+
+          document.getElementById("comment-input").value = "";
+
+          // Re-fetch and re-render all comments
+          commentsDiv.innerHTML    = "";
+          const newSnap            = await getDocs(q);
+          newSnap.forEach(d => renderComment(d, user, commentsDiv));
+        });
+
+      } else {
+        document.getElementById("comment-form").style.display  = "none";
+        document.getElementById("comment-login").style.display = "";
+      }
+    }
+
+
+    // ═══════════════════════════════════════════════
+    //  DATA LOGIC
+    //  Fetching and wiring — avoid editing this
+    //  unless the data model changes.
+    // ════════════════════════════════════════════════
+
     const id = new URLSearchParams(window.location.search).get("id");
+
+    // No ID — pick a random trail
     if (!id) {
       const snapshot = await getDocs(collection(db, "trails"));
-      const docs = snapshot.docs;
+      const docs     = snapshot.docs;
       if (!docs.length) {
         document.getElementById("status").textContent = "No trails found.";
       } else {
         const random = docs[Math.floor(Math.random() * docs.length)];
         window.location.href = `trail.html?id=${random.id}`;
       }
-    }
 
-    else {
+    } else {
       const snap = await getDoc(doc(db, "trails", id));
-      if (!snap.exists()) { document.getElementById("status").textContent = "Trail not found."; }
 
-      else {
-        const t = snap.data();
-        document.title = t.name;
-        document.getElementById("status").style.display = "none";
+      if (!snap.exists()) {
+        document.getElementById("status").textContent = "Trail not found.";
+
+      } else {
+        document.getElementById("status").style.display  = "none";
         document.getElementById("content").style.display = "";
 
-        document.getElementById("name").textContent        = t.name;
-        document.getElementById("org").textContent         = t.associated_org   ?? "";
-        document.getElementById("type").textContent        = "Type: "           + t.trail_type;
-        document.getElementById("length").textContent      = "Length: "         + t.length_mi        + " mi";
-        document.getElementById("gain").textContent        = "Elevation gain: " + t.elevation_gain   + " ft";
-        document.getElementById("start-elev").textContent  = t.start_elev_ft   ? "Starting elev: "  + t.start_elev_ft  + " ft" : "";
-        document.getElementById("est-time").textContent    = t.est_time_hr     ? "Est. time: "       + t.est_time_hr    + " hr (±50%)" : "";
-        document.getElementById("roughness").textContent   = t.roughness       ? "Roughness: "       + t.roughness      + "/10" : "";
-        document.getElementById("hours").textContent       = t.opening_hours   ? "Hours: "           + (t.opening_hours.open + "–" + t.opening_hours.close + " " + (t.opening_hours.notes ?? "")).trim() : "";
-        document.getElementById("location").textContent    = t.location        ? "Location: "        + t.location.latitude + ", " + t.location.longitude : "";
-        document.getElementById("surfaces").textContent    = t.surfaces?.length ? "Surfaces: "       + t.surfaces.join(", ") : "";
-        document.getElementById("biomes").textContent      = t.biomes?.length  ? "Biomes: "          + t.biomes.join(", ") : "";
-        document.getElementById("description").textContent = t.description     ?? "";
+        renderTrail(snap.data(), id);
 
-        if (t.updated_by && t.updated_at) {
-          const date = t.updated_at.toDate().toLocaleDateString();
-          document.getElementById("edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
-        }
-
-        (t.images ?? []).forEach(url => {
-          const img = document.createElement("img");
-          img.src = url;
-          img.width = 300;
-          document.getElementById("images").appendChild(img);
-        });
-
-        // Add edit button
-        const editBtn = document.createElement("a");
-        editBtn.textContent = "Edit Trail";
-        onAuthStateChanged(auth, (user) => {
-          editBtn.href = user
-            ? `add_trail.html?edit=${id}`
-            : `login.html?redirect=trail.html?id=${id}`;
-          user = user;
-        });
-        document.getElementById("content").prepend(editBtn);
-
-
-        // Load comments
         const commentsDiv = document.getElementById("comments");
-        const q = query(collection(db, "comments"), where("trail_id", "==", id), orderBy("created_at", "asc"));
+        const q = query(
+          collection(db, "comments"),
+          where("trail_id", "==", id),
+          orderBy("created_at", "asc")
+        );
         const commentSnap = await getDocs(q);
-        
-        // Show form or login prompt
+
         onAuthStateChanged(auth, (user) => {
-          if (user) {
-            document.getElementById("comment-form").style.display = "";
-            document.getElementById("comment-login").style.display = "none";
-            document.getElementById("comment-submit").addEventListener("click", async () => {
-              const contents = document.getElementById("comment-input").value.trim();
-              if (!contents) return;
-              await addDoc(collection(db, "comments"), {
-                trail_id:   id,
-                uid:        user.uid,
-                email:      user.email,
-                contents:   contents,
-                created_at: serverTimestamp(),
-              });
-              document.getElementById("comment-input").value = "";
-              // Reload comments
-              const p = document.createElement("p");
-              p.textContent = `${user.email} (just now): ${contents}`;
-              commentsDiv.appendChild(p);
-            });
-          } else {
-            document.getElementById("comment-form").style.display = "none";
-            document.getElementById("comment-login").style.display = "";
-          }
-          
-          commentSnap.forEach(d => {
-            const c = d.data();
-            const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
-            
-            const div = document.createElement("div");
-            div.id = `comment-${d.id}`;
-            
-            const p = document.createElement("p");
-            p.textContent = `${c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
-            div.appendChild(p);
-
-            if (user && user.uid === c.uid) {
-              const deleteBtn = document.createElement("button");
-              deleteBtn.textContent = "Delete";
-              deleteBtn.addEventListener("click", async () => {
-                await deleteDoc(doc(db, "comments", d.id));
-                div.remove();
-              });
-              div.appendChild(deleteBtn);
-              const editBtn = document.createElement("button");
-              editBtn.textContent = "Edit";
-              editBtn.addEventListener("click", () => {
-                const input = document.createElement("textarea");
-                input.value = c.contents;
-                input.rows = 3;
-                input.cols = 40;
-
-                const saveBtn = document.createElement("button");
-                saveBtn.textContent = "Save";
-                saveBtn.addEventListener("click", async () => {
-                  const newText = input.value.trim();
-                  if (!newText) return;
-                  await updateDoc(doc(db, "comments", d.id), { contents: newText, edited: true });
-                  p.textContent = `${c.email} (${date}) (edited): ${newText}`;
-                  div.replaceChildren(p, editBtn);
-                });
-
-                const cancelBtn = document.createElement("button");
-                cancelBtn.textContent = "Cancel";
-                cancelBtn.addEventListener("click", () => {
-                  div.replaceChildren(p, editBtn);
-                });
-
-                div.replaceChildren(input, saveBtn, cancelBtn);
-              });
-              div.appendChild(editBtn);
-            }
-
-            commentsDiv.appendChild(div);
-          });
-      });
+          renderEditButton(id, user);
+          renderCommentForm(user, db, id, commentsDiv, q);
+          commentsDiv.innerHTML = "";
+          commentSnap.forEach(d => renderComment(d, user, commentsDiv));
+        });
       }
     }
   </script>
