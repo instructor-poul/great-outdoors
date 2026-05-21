@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   addDoc,
+  setDoc,
   getDoc,
   getDocs,
   updateDoc,
@@ -41,7 +42,7 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+export const db  = getFirestore(app);
 export const auth = getAuth(app);
 
 // ── Collection reference ─────────────────────────────────────
@@ -277,24 +278,88 @@ export async function deleteTrail(id) {
 }
 
 
-
 // AUTH
 // SIGN UP
-window.signUp = function () {
+window.signUp = async function () {
 
-  const email = document.getElementById("signup-email").value;
+  const username = document.getElementById("signup-username").value.trim();
+  const email = document.getElementById("signup-email").value.trim();
   const password = document.getElementById("signup-password").value;
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account Created!");
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      alert(error.message);
+  const usernameLower = username.toLowerCase();
+
+  if (!username || !email || !password) {
+    alert("Please fill out username, email, and password.");
+    return;
+  }
+
+  if (username.length < 3) {
+    alert("Username must be at least 3 characters long.");
+    return;
+  }
+
+  try {
+    // Check if username already exists
+    const usernameQuery = query(
+      collection(db, "users"),
+      where("usernameLower", "==", usernameLower)
+    );
+
+    const usernameSnapshot = await getDocs(usernameQuery);
+
+    if (!usernameSnapshot.empty) {
+      alert("That username is already taken. Please choose another one.");
+      return;
+    }
+
+    // Create Firebase Auth account
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Save public user profile in Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      username: username,
+      usernameLower: usernameLower,
+      email: email,
+      created_at: serverTimestamp()
     });
+
+    alert("Account Created!");
+    window.location.href = "dashboard.html";
+
+  } catch (error) {
+    alert(error.message);
+  }
 };
 
+// GET CURRENT USERNAME
+export async function getCurrentUsername() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    return null;
+  }
+
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+
+  if (userSnap.exists()) {
+    return userSnap.data().username;
+  }
+
+  return null;
+}
+
+// GET USERNAME BY USER ID
+export async function getUsernameByUid(uid) {
+  const userSnap = await getDoc(doc(db, "users", uid));
+
+  if (userSnap.exists()) {
+    return userSnap.data().username;
+  }
+
+  return "Unknown User";
+}
 
 // LOGIN
 window.login = function () {
