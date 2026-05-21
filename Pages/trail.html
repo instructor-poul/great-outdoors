@@ -37,7 +37,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, getDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { query, where, orderBy, addDoc, collection, firebaseConfig, onAuthStateChanged, auth } from "../Scripts/great_outdoors.js";
+    import { query, where, orderBy, addDoc, updateDoc, deleteDoc, collection, firebaseConfig, onAuthStateChanged, auth } from "../Scripts/great_outdoors.js";
     //import  from "../Scripts/great_outdoors.js";
 
     const db = getFirestore(initializeApp(firebaseConfig));
@@ -97,6 +97,7 @@
           editBtn.href = user
             ? `add_trail.html?edit=${id}`
             : `login.html?redirect=trail.html?id=${id}`;
+          user = user;
         });
         document.getElementById("content").prepend(editBtn);
 
@@ -105,14 +106,7 @@
         const commentsDiv = document.getElementById("comments");
         const q = query(collection(db, "comments"), where("trail_id", "==", id), orderBy("created_at", "asc"));
         const commentSnap = await getDocs(q);
-        commentSnap.forEach(d => {
-          const c = d.data();
-          const p = document.createElement("p");
-          const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
-          p.textContent = `${c.email} (${date}): ${c.contents}`;
-          commentsDiv.appendChild(p);
-        });
-
+        
         // Show form or login prompt
         onAuthStateChanged(auth, (user) => {
           if (user) {
@@ -138,7 +132,58 @@
             document.getElementById("comment-form").style.display = "none";
             document.getElementById("comment-login").style.display = "";
           }
-        });
+          
+          commentSnap.forEach(d => {
+            const c = d.data();
+            const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
+            
+            const div = document.createElement("div");
+            div.id = `comment-${d.id}`;
+            
+            const p = document.createElement("p");
+            p.textContent = `${c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
+            div.appendChild(p);
+
+            if (user && user.uid === c.uid) {
+              const deleteBtn = document.createElement("button");
+              deleteBtn.textContent = "Delete";
+              deleteBtn.addEventListener("click", async () => {
+                await deleteDoc(doc(db, "comments", d.id));
+                div.remove();
+              });
+              div.appendChild(deleteBtn);
+              const editBtn = document.createElement("button");
+              editBtn.textContent = "Edit";
+              editBtn.addEventListener("click", () => {
+                const input = document.createElement("textarea");
+                input.value = c.contents;
+                input.rows = 3;
+                input.cols = 40;
+
+                const saveBtn = document.createElement("button");
+                saveBtn.textContent = "Save";
+                saveBtn.addEventListener("click", async () => {
+                  const newText = input.value.trim();
+                  if (!newText) return;
+                  await updateDoc(doc(db, "comments", d.id), { contents: newText, edited: true });
+                  p.textContent = `${c.email} (${date}) (edited): ${newText}`;
+                  div.replaceChildren(p, editBtn);
+                });
+
+                const cancelBtn = document.createElement("button");
+                cancelBtn.textContent = "Cancel";
+                cancelBtn.addEventListener("click", () => {
+                  div.replaceChildren(p, editBtn);
+                });
+
+                div.replaceChildren(input, saveBtn, cancelBtn);
+              });
+              div.appendChild(editBtn);
+            }
+
+            commentsDiv.appendChild(div);
+          });
+      });
       }
     }
   </script>
