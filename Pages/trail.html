@@ -116,7 +116,7 @@
       div.id    = `comment-${d.id}`;
 
       const p = document.createElement("p");
-      p.textContent = `${c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
+      p.textContent = `${c.username ?? c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
       div.appendChild(p);
 
       if (user && user.uid === c.uid) {
@@ -171,10 +171,14 @@
           const contents = document.getElementById("comment-input").value.trim();
           if (!contents) return;
 
+          const userSnap = await getDoc(doc(db, "users", user.uid));
+          const username = userSnap.exists() ? userSnap.data().username : user.email;
+
           await addDoc(collection(db, "comments"), {
             trail_id:   trailId,
             uid:        user.uid,
-            email:      user.email,
+            email:      user.email,   // keep for backwards compat if you want
+            username:   username,     // add this
             contents:   contents,
             created_at: serverTimestamp(),
           });
