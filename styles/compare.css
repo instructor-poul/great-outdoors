@@ -1,0 +1,290 @@
+/* ============================================================
+   compare.css  –  Trail Comparison View
+   The Great Outdoors  |  Issue #33
+   ============================================================ */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --forest-dark:   #1b3a2d;
+  --forest-mid:    #2e5e45;
+  --forest-light:  #4a8c64;
+  --bark:          #7a5c3e;
+  --bark-light:    #c49a6c;
+  --stone:         #e8e4dc;
+  --stone-dark:    #c8c0b0;
+  --sky:           #d4eaf5;
+  --cream:         #faf8f3;
+  --text-dark:     #1a1a1a;
+  --text-mid:      #4a4a4a;
+  --text-light:    #6e6e6e;
+  --highlight-a:   #2e5e45;
+  --highlight-b:   #7a5c3e;
+  --radius:        10px;
+  --shadow:        0 4px 18px rgba(0,0,0,0.10);
+  --font-display:  'Georgia', 'Times New Roman', serif;
+  --font-body:     'Trebuchet MS', 'Gill Sans', sans-serif;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--cream);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Header ---------- */
+.cmp-header {
+  background: linear-gradient(135deg, var(--forest-dark) 0%, var(--forest-mid) 100%);
+  color: #fff;
+  padding: 2rem 1.5rem 1.6rem;
+  text-align: center;
+  position: relative;
+}
+
+.cmp-back {
+  position: absolute;
+  left: 1.2rem;
+  top: 1.2rem;
+  color: var(--bark-light);
+  text-decoration: none;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+.cmp-back:hover { color: #fff; }
+
+.cmp-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: normal;
+  letter-spacing: 0.04em;
+  margin-top: 0.4rem;
+}
+
+.cmp-subtitle {
+  margin-top: 0.4rem;
+  color: var(--stone);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Main ---------- */
+.cmp-main {
+  flex: 1;
+  padding: 2rem 1rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ---------- Selectors ---------- */
+.cmp-selectors {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.cmp-selector-card {
+  background: #fff;
+  border: 2px solid var(--stone-dark);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.4rem;
+  flex: 1 1 220px;
+  max-width: 340px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s;
+}
+.cmp-selector-card:focus-within { border-color: var(--forest-light); }
+
+.cmp-selector-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 0.55rem;
+}
+
+#selector-a .cmp-selector-label { color: var(--highlight-a); }
+#selector-b .cmp-selector-label { color: var(--highlight-b); }
+
+.cmp-select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--stone-dark);
+  border-radius: 6px;
+  background: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  appearance: auto;
+}
+.cmp-select:focus { outline: 2px solid var(--forest-light); outline-offset: 2px; }
+
+.cmp-vs {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--stone-dark);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+/* ---------- Placeholder ---------- */
+.cmp-placeholder {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-light);
+}
+.cmp-placeholder-icon { font-size: 3rem; display: block; margin-bottom: 0.8rem; }
+.cmp-placeholder p { font-size: 1rem; }
+
+/* ---------- Comparison Table ---------- */
+.cmp-table-wrapper { width: 100%; overflow-x: auto; }
+
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: #fff;
+}
+
+.cmp-table thead tr {
+  background: var(--forest-dark);
+  color: #fff;
+}
+
+.cmp-th-metric {
+  padding: 1rem 1.2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  width: 30%;
+}
+
+.cmp-th-trail {
+  padding: 1rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: normal;
+  text-align: center;
+  width: 35%;
+}
+
+#th-trail-a { background: var(--forest-mid); }
+#th-trail-b { background: var(--bark); }
+
+.cmp-table tbody tr {
+  border-bottom: 1px solid var(--stone);
+  transition: background 0.15s;
+}
+.cmp-table tbody tr:last-child { border-bottom: none; }
+.cmp-table tbody tr:hover { background: var(--stone); }
+.cmp-table tbody tr:nth-child(even) { background: var(--cream); }
+.cmp-table tbody tr:nth-child(even):hover { background: var(--stone); }
+
+.cmp-td-metric {
+  padding: 0.9rem 1.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  font-weight: bold;
+}
+
+.cmp-td-value {
+  padding: 0.9rem 1.2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+/* Difficulty badge */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge-easy       { background: #d4edda; color: #1a5c2a; }
+.badge-moderate   { background: #fff3cd; color: #7d5a00; }
+.badge-hard       { background: #ffe0b2; color: #8c3a00; }
+.badge-strenuous  { background: #fde0e0; color: #8c0000; }
+
+/* "Better" highlight */
+.cmp-td-value.is-better {
+  font-weight: bold;
+  color: var(--forest-mid);
+}
+
+/* ---------- Footer ---------- */
+.cmp-footer {
+  text-align: center;
+  padding: 1.2rem;
+  background: var(--forest-dark);
+  color: var(--stone);
+  font-size: 0.85rem;
+}
+.cmp-footer a { color: var(--bark-light); text-decoration: none; }
+.cmp-footer a:hover { color: #fff; }
+
+/* ---------- Mobile: stack vertically ---------- */
+@media (max-width: 560px) {
+  .cmp-selectors { flex-direction: column; align-items: stretch; }
+  .cmp-selector-card { max-width: 100%; }
+  .cmp-vs { text-align: center; }
+
+  .cmp-table thead tr { display: none; }   /* hide header row */
+
+  .cmp-table,
+  .cmp-table tbody,
+  .cmp-table tr,
+  .cmp-table td { display: block; width: 100%; }
+
+  .cmp-table tr {
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--stone-dark);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .cmp-td-metric {
+    background: var(--forest-dark);
+    color: #fff;
+    padding: 0.6rem 1rem;
+  }
+
+  .cmp-td-value {
+    text-align: left;
+    padding: 0.6rem 1rem;
+  }
+
+  /* Label each value cell with trail name via data attribute */
+  .cmp-td-value::before {
+    content: attr(data-trail) ": ";
+    font-weight: bold;
+    color: var(--text-light);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+}
