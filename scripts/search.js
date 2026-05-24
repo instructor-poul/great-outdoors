@@ -44,11 +44,19 @@ function renderTrails(trails) {
 document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('search-input');
 
-  input.addEventListener('input', function () {
-    const query = input.value.toLowerCase().trim();
-    const results = filterTrails(query);
-    renderTrails(results);
-  });
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+input.addEventListener('input', debounce(function () {
+  const query = input.value.toLowerCase().trim();
+  const results = filterTrails(query);
+  renderTrails(results);
+}, 300));
 });
 
 // Clear button resets the field and shows all trails
