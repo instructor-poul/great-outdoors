@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Rattlesnake Ledge",
+    "location": "North Bend, WA",
+    "coordinates": { "lat": 47.4343, "lng": -121.7697 },
+    "distance_mi": 4.0,
+    "elevation_gain_ft": 1100,
+    "difficulty": "Moderate",
+    "estimated_time": "2–3 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Rattlesnake_Ledge.jpg/1280px-Rattlesnake_Ledge.jpg"
+  },
+  {
+    "name": "Mount Si",
+    "location": "North Bend, WA",
+    "coordinates": { "lat": 47.4876, "lng": -121.7237 },
+    "distance_mi": 8.0,
+    "elevation_gain_ft": 3150,
+    "difficulty": "Hard",
+    "estimated_time": "5–7 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mount_Si.jpg/1280px-Mount_Si.jpg"
+  },
+  {
+    "name": "Twin Falls",
+    "location": "Olallie State Park, WA",
+    "coordinates": { "lat": 47.4496, "lng": -121.6982 },
+    "distance_mi": 2.6,
+    "elevation_gain_ft": 500,
+    "difficulty": "Easy",
+    "estimated_time": "1–2 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Twin_Falls_WA.jpg/1280px-Twin_Falls_WA.jpg"
+  },
+  {
+    "name": "Franklin Falls",
+    "location": "Snoqualmie Pass, WA",
+    "coordinates": { "lat": 47.4351, "lng": -121.5271 },
+    "distance_mi": 2.0,
+    "elevation_gain_ft": 400,
+    "difficulty": "Easy",
+    "estimated_time": "1 hr",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Franklin_Falls.jpg/1280px-Franklin_Falls.jpg"
+  },
+  {
+    "name": "Poo Poo Point",
+    "location": "Issaquah, WA",
+    "coordinates": { "lat": 47.4746, "lng": -121.9871 },
+    "distance_mi": 3.8,
+    "elevation_gain_ft": 1600,
+    "difficulty": "Moderate",
+    "estimated_time": "3–4 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Poo_Poo_Point.jpg/1280px-Poo_Poo_Point.jpg"
+  },
+  {
+    "name": "Tiger Mountain Trail",
+    "location": "Issaquah, WA",
+    "coordinates": { "lat": 47.5162, "lng": -121.9621 },
+    "distance_mi": 13.9,
+    "elevation_gain_ft": 3200,
+    "difficulty": "Hard",
+    "estimated_time": "7–9 hrs",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tiger_Mountain.jpg/1280px-Tiger_Mountain.jpg"
+  },
+  {
+    "name": "Mailbox Peak",
+    "location": "Middle Fork Snoqualmie, WA",
+    "coordinates": { "lat": 47.5318, "lng": -121.6782 },
+    "distance_mi": 9.4,
+    "elevation_gain_ft": 4000,
+    "difficulty": "Hard",
+    "estimated_time": "6–8 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Mailbox_Peak.jpg/1280px-Mailbox_Peak.jpg"
+  },
+  {
+    "name": "Lake Serene",
+    "location": "Index, WA",
+    "coordinates": { "lat": 47.8235, "lng": -121.4327 },
+    "distance_mi": 8.0,
+    "elevation_gain_ft": 2500,
+    "difficulty": "Hard",
+    "estimated_time": "5–7 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Lake_Serene.jpg/1280px-Lake_Serene.jpg"
+  },
+  {
+    "name": "Snow Lake",
+    "location": "Snoqualmie Pass, WA",
+    "coordinates": { "lat": 47.4488, "lng": -121.4012 },
+    "distance_mi": 7.2,
+    "elevation_gain_ft": 1800,
+    "difficulty": "Moderate",
+    "estimated_time": "4–5 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Snow_Lake_WA.jpg/1280px-Snow_Lake_WA.jpg"
+  },
+  {
+    "name": "Ira Spring Trail",
+    "location": "North Bend, WA",
+    "coordinates": { "lat": 47.3947, "lng": -121.5784 },
+    "distance_mi": 7.0,
+    "elevation_gain_ft": 2100,
+    "difficulty": "Moderate",
+    "estimated_time": "4–5 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Ira_Spring.jpg/1280px-Ira_Spring.jpg"
+  },
+  {
+    "name": "Tolmie Peak",
+    "location": "Mount Rainier NP, WA",
+    "coordinates": { "lat": 46.9373, "lng": -121.8662 },
+    "distance_mi": 6.5,
+    "elevation_gain_ft": 1020,
+    "difficulty": "Moderate",
+    "estimated_time": "3–4 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Tolmie_Peak.jpg/1280px-Tolmie_Peak.jpg"
+  },
+  {
+    "name": "Spray Park",
+    "location": "Mount Rainier NP, WA",
+    "coordinates": { "lat": 46.9523, "lng": -121.8791 },
+    "distance_mi": 8.0,
+    "elevation_gain_ft": 1400,
+    "difficulty": "Moderate",
+    "estimated_time": "4–5 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Spray_Park.jpg/1280px-Spray_Park.jpg"
+  },
+  {
+    "name": "Skyline Trail",
+    "location": "Mount Rainier NP, WA",
+    "coordinates": { "lat": 46.7865, "lng": -121.7357 },
+    "distance_mi": 5.5,
+    "elevation_gain_ft": 1400,
+    "difficulty": "Moderate",
+    "estimated_time": "3–4 hrs",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Skyline_Trail.jpg/1280px-Skyline_Trail.jpg"
+  },
+  {
+    "name": "Cape Flattery",
+    "location": "Neah Bay, WA",
+    "coordinates": { "lat": 48.3874, "lng": -124.7120 },
+    "distance_mi": 1.5,
+    "elevation_gain_ft": 100,
+    "difficulty": "Easy",
+    "estimated_time": "1 hr",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Cape_Flattery.jpg/1280px-Cape_Flattery.jpg"
+  },
+  {
+    "name": "Hurricane Hill",
+    "location": "Olympic NP, WA",
+    "coordinates": { "lat": 48.0027, "lng": -123.5081 },
+    "distance_mi": 3.2,
+    "elevation_gain_ft": 700,
+    "difficulty": "Easy",
+    "estimated_time": "2 hrs",
+    "trail_type": "out-and-back",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Hurricane_Hill.jpg/1280px-Hurricane_Hill.jpg"
+  },
+  {
+    "name": "Hoh Rain Forest Hall of Mosses",
+    "location": "Olympic NP, WA",
+    "coordinates": { "lat": 47.8607, "lng": -123.9341 },
+    "distance_mi": 0.8,
+    "elevation_gain_ft": 30,
+    "difficulty": "Easy",
+    "estimated_time": "30 min",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Hall_of_Mosses.jpg/1280px-Hall_of_Mosses.jpg"
+  },
+  {
+    "name": "High Divide Loop",
+    "location": "Olympic NP, WA",
+    "coordinates": { "lat": 47.9712, "lng": -123.7183 },
+    "distance_mi": 18.5,
+    "elevation_gain_ft": 4400,
+    "difficulty": "Hard",
+    "estimated_time": "2–3 days",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/High_Divide.jpg/1280px-High_Divide.jpg"
+  },
+  {
+    "name": "Silver Falls Loop",
+    "location": "Mount Rainier NP, WA",
+    "coordinates": { "lat": 46.7428, "lng": -121.5541 },
+    "distance_mi": 2.8,
+    "elevation_gain_ft": 200,
+    "difficulty": "Easy",
+    "estimated_time": "1–2 hrs",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Silver_Falls.jpg/1280px-Silver_Falls.jpg"
+  },
+  {
+    "name": "Maple Pass Loop",
+    "location": "North Cascades, WA",
+    "coordinates": { "lat": 48.5169, "lng": -120.6742 },
+    "distance_mi": 7.2,
+    "elevation_gain_ft": 2000,
+    "difficulty": "Moderate",
+    "estimated_time": "4–5 hrs",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Maple_Pass.jpg/1280px-Maple_Pass.jpg"
+  },
+  {
+    "name": "Chain Lakes Loop",
+    "location": "Mount Baker, WA",
+    "coordinates": { "lat": 48.8372, "lng": -121.6912 },
+    "distance_mi": 6.5,
+    "elevation_gain_ft": 1600,
+    "difficulty": "Moderate",
+    "estimated_time": "4–5 hrs",
+    "trail_type": "loop",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Chain_Lakes.jpg/1280px-Chain_Lakes.jpg"
+  }
+]

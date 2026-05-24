@@ -18,12 +18,16 @@
 <p id="alttext" style="font-size:50px"> <p>
 
 <ul>
-<li><a href="mountain.html">Climb the Mountain</a></li>
-<li><a href="forest.html">Wander the Forest</a></li>
-<li><a href="falls.html">See the Falls</a></li>
-<li><a href="ferry.html">Ride the Ferry</a></li>
-<li><a href="lake.html">Walk Around the Lake</a></li>
-<li><a href="park.html">Read in the Park</a></li>
+<div id="search-container">
+  <input
+    type="text"
+    id="search-input"
+    placeholder="Search by trail name or location..."
+  >
+  <button id="clear-btn" onclick="clearSearch()">✕ Clear</button>
+</div>
+
+<div id="trail-results"></div>
 </ul>
 
 </body>
