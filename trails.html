@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Trails</title>
+    <link rel="stylesheet" href="styles/toplevel.css">
+
+    <style>
+        #trail-list {
+            display: grid;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .trail-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>All Trails</h1>
+
+    <div id="trail-list"></div>
+
+    <script>
+        fetch('./data/trails.json')
+            .then(response => response.json())
+            .then(data => {
+                const trailList = document.getElementById('trail-list');
+
+                data.forEach(trail => {
+                    const card = document.createElement('div');
+                    card.className = 'trail-card';
+
+                    card.innerHTML = `
+                        <h2>${trail.name}</h2>
+                        <p><strong>Location:</strong> ${trail.location}</p>
+                        <p><strong>Distance:</strong> ${trail.distance_mi} mi</p>
+                        <p><strong>Elevation Gain:</strong> ${trail.elevation_gain_ft} ft</p>
+                        <p><strong>Difficulty:</strong> ${trail.difficulty}</p>
+                        <p><strong>Estimated Time:</strong> ${trail.estimated_time}</p>
+                    `;
+
+                    trailList.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+</body>
+</html>
