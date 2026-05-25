@@ -8,19 +8,40 @@ h1 {
 }
 
 img{
-  width:300px;
-  height:200px;
-  border:10px solid green;
-  color:white;
-  border-radius:20px;
-  vertical-align: top;
+ width:300px;
+ height:200px;
+ border:10px solid green;
+ color:white;
+ border-radius:20px;
+ vertical-align: top;
 }
 
 figcaption{
-  width: 315px;
+ width: 315px;
   text-align: left;
   margin-left: 25px;
   color:black;
   font-style: italic;
   font-size: 30px;
+}
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 0;
+  width: 220px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
