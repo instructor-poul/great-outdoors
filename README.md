@@ -64,41 +64,33 @@ Use the VS Code Live Server extension.
 
 ## Folder Structure
 
-````plaintext
-great-outdoors/
-│
-├── .github/
-│   └── ISSUE_TEMPLATE/
-│
-├── docs/
-├── images/
-├── scripts/
-├── styles/
-│
-├── README.md
-├── index.html
-├── forest.html
-├── mountain.html
-├── lake.html
-├── park.html
-├── ferry.html
-└── falls.html
 ```plaintext
 great-outdoors/
-│
-├── frontend/
-│   ├── css/
-│   ├── js/
-│   └── assets/
 │
 ├── data/
 │   └── trails.json
 │
 ├── docs/
+├── images/
+├── scripts/
+│   └── myscripts.js
 │
-├── README.md
-└── .gitignore
-````
+├── styles/
+│   ├── branchlevel.css
+│   ├── toplevel.css
+│   └── variables.css
+│
+├── falls.html
+├── ferry.html
+├── forest.html
+├── index.html
+├── lake.html
+├── mountain.html
+├── park.html
+├── trails.html
+└── README.md
+```
+
 
 ---
 
