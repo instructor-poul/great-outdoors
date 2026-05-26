@@ -271,14 +271,22 @@ function renderStars(rating, opts = {}) {
 /* ---------- Header & footer ---------- */
 function renderHeader() {
   const u = Auth.user();
+
   const adminLink = u && u.role === 'admin'
     ? `<a href="admin.html">Admin</a>`
     : '';
+
   const userArea = u
     ? `<div class="user-chip">
          ${sizeIcon('user', 16)}
-         <span>${escapeHtml(u.username)}${u.role === 'admin' ? '<span class="admin-pill">Admin</span>' : ''}</span>
+         <span>
+           ${escapeHtml(u.username)}
+           ${u.role === 'admin'
+             ? '<span class="admin-pill">Admin</span>'
+             : ''}
+         </span>
        </div>
+ HEAD
        <button id="nav-logout" type="button">${sizeIcon('logout', 16)}<span>Logout</span></button>`
     : `<div class="nav-account-wrap">
          <button class="nav-account-btn" id="nav-account-btn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -290,21 +298,53 @@ function renderHeader() {
          </div>
        </div>`;
 
+
+       <button id="nav-logout" type="button">
+         ${sizeIcon('logout', 16)}
+         <span>Logout</span>
+       </button>`
+    : `<a href="login.html">
+         ${sizeIcon('user', 16)}
+         <span>Login</span>
+       </a>`;
+ 553056e (Fix mobile navigation responsiveness and accessibility)
+
   return `
   <header class="site-header">
     <div class="inner">
+
       <a class="brand" href="index.html">
         ${sizeIcon('mountain', 32)}
         <span class="brand-name">The Great Outdoors</span>
       </a>
-      <nav class="site-nav">
-        <a href="index.html#discover" id="nav-discover">Discover Trails</a>
-        <a href="safety.html">Safety &amp; Leave No Trace</a>
-        <a href="about.html">About Us</a>
+
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        aria-label="Toggle navigation menu">
+        ☰
+      </button>
+
+      <nav class="site-nav" id="site-nav">
+        <a href="index.html#discover" id="nav-discover">
+          Discover Trails
+        </a>
+
+        <a href="safety.html">
+          Safety &amp; Leave No Trace
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
         ${adminLink}
+
         <span class="divider" aria-hidden="true"></span>
+
         ${userArea}
       </nav>
+
     </div>
   </header>`;
 }
@@ -318,17 +358,22 @@ function renderFooter() {
 
 /* Mount header + footer into the page, wire up nav events */
 function mountChrome() {
+
   // Header
   const headerHost = document.getElementById('site-header');
+
   if (headerHost) {
     headerHost.outerHTML = renderHeader();
+
     const logoutBtn = document.getElementById('nav-logout');
+
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
         Auth.logout();
         window.location.reload();
       });
     }
+ HEAD
     // Account dropdown toggle (shown when logged out)
     const accountBtn = document.getElementById('nav-account-btn');
     const accountDropdown = document.getElementById('nav-account-dropdown');
@@ -344,23 +389,46 @@ function mountChrome() {
       });
       accountDropdown.addEventListener('click', (e) => e.stopPropagation());
     }
+
+    // Mobile Menu Toggle
+    const toggle = document.getElementById('menu-toggle');
+    const nav = document.getElementById('site-nav');
+
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('mobile-open');
+      });
+    }
+
+    553056e (Fix mobile navigation responsiveness and accessibility)
     // Smooth-scroll for #discover when already on home
     const discover = document.getElementById('nav-discover');
+
     if (discover) {
       discover.addEventListener('click', (e) => {
-        const isHome = /(^|\/)(index\.html)?$/.test(window.location.pathname);
+
+        const isHome =
+          /(^|\/)(index\.html)?$/.test(window.location.pathname);
+
         if (isHome) {
+
           const el = document.getElementById('discover');
+
           if (el) {
             e.preventDefault();
-            el.scrollIntoView({ behavior: 'smooth' });
+
+            el.scrollIntoView({
+              behavior: 'smooth'
+            });
           }
         }
       });
     }
   }
+
   // Footer
   const footerHost = document.getElementById('site-footer');
+
   if (footerHost) {
     footerHost.outerHTML = renderFooter();
   }
