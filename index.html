@@ -10,6 +10,7 @@
 
 <body>
 <script src="scripts/myscripts.js"></script>
+<script src="scripts/trail-data.js"></script>
 <h1>Welcome to the Great Outdoors!</h1>
 
 
@@ -26,6 +27,37 @@
 <li><a href="lake.html">Walk Around the Lake</a></li>
 <li><a href="park.html">Read in the Park</a></li>
 </ul>
+
+<h2>Featured Trails</h2>
+<section id="trails-gallery" style="display:flex;flex-wrap:wrap;gap:16px"></section>
+
+<script>
+const loadTrailData = () => {
+	if (window.TRAILS_DATA) {
+		return Promise.resolve(window.TRAILS_DATA);
+	}
+	return fetch('data/trails.json').then(resp => resp.json());
+};
+
+loadTrailData()
+	.then(trails => {
+		const container = document.getElementById('trails-gallery');
+		trails.forEach(t => {
+			const card = document.createElement('article');
+			card.style.width = '200px';
+			const img = document.createElement('img');
+			img.src = t.scenery_photo_url;
+			img.alt = t.name;
+			img.style.width = '100%';
+			const title = document.createElement('h3');
+			title.textContent = t.name;
+			card.appendChild(img);
+			card.appendChild(title);
+			container.appendChild(card);
+		});
+	})
+	.catch(err => console.error('Failed to load trails.json', err));
+</script>
 
 </body>
 </html>

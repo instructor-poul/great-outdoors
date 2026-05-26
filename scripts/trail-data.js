@@ -1,4 +1,5 @@
-[
+/* Trail data fallback for file:// usage */
+window.TRAILS_DATA = [
   {
     "name": "Rattlesnake Ledge",
     "location": "North Bend, WA",
@@ -220,4 +221,4 @@
     "trail_type": "out-and-back",
     "scenery_photo_url": "images/mountstorm_20.jpg"
   }
-]
+];
