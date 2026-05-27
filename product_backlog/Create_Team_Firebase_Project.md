@@ -1,5 +1,11 @@
 # Product Backlog – Create Team Firebase Project
 
+## Description
+
+Create and configure a shared Firebase project that will be used to host and manage the team website. One team member will act as the Firebase project administrator and will be responsible for creating the Firebase project, configuring initial hosting settings, and granting access permissions to the remaining team members.
+
+All team members will then configure their local development environments and verify that all members can successfully access the Firebase Console and interact with the shared Firebase project locally.
+
 ## User Story
 **As a** student development team  
 **We want** a shared Firebase project created  
