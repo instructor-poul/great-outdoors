@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Trail</title>
+  <style>
+    input:invalid, select:invalid, textarea:invalid { border: 2px solid red; }
+  </style>
+</head>
+<body>
+
+  <h1>PLACEHOLDER Add Trail</h1>
+  <p id="status"></p>
+
+  <form id="trail-form">
+    <p><label>Name *<br><input name="name" required></label></p>
+    <p><label>Length (mi) *<br><input name="length_mi" type="number" step="any" required></label></p>
+    <p><label>Elevation Gain (ft) *<br><input name="elevation_gain" type="number" required></label></p>
+    <p><label>Trail Type *<br>
+      <select name="trail_type" required>
+        <option value="">-- select --</option>
+        <option value="loop">Loop</option>
+        <option value="out_and_back">Out & Back</option>
+        <option value="point_to_point">Point to Point</option>
+        <option value="lollipop">Lollipop</option>
+      </select>
+    </label></p>
+    <p><label>Latitude *<br><input name="lat" type="number" step="any" min="-90" max="90" required></label></p>
+    <p><label>Longitude *<br><input name="lng" type="number" step="any" min="-180" max="180" required></label></p>
+
+    <hr>
+
+    <p><label>Starting Elevation (ft)<br><input name="start_elev_ft" type="number"></label></p>
+    <p><label>Roughness (1–10)<br><input name="roughness" type="number" min="1" max="10"></label></p>
+    <p><label>Opening Time (e.g. 06:00)<br><input name="hours_open"></label></p>
+    <p><label>Closing Time (e.g. 20:00)<br><input name="hours_close"></label></p>
+    <p><label>Hours Notes (e.g. Closed Dec–Mar)<br><input name="hours_notes"></label></p>
+    <p><label>Est. Time (hr)<br><input name="est_time_hr" type="number" step="any"></label></p>
+    <p><label>Description (max 2000 chars)<br><textarea name="description" maxlength="2000" rows="4" cols="40"></textarea></label></p>
+    <p><label>Associated Org<br><input name="associated_org"></label></p>
+    <p><label>Surfaces (comma separated)<br><input name="surfaces" placeholder="dirt, rocks, gravel"></label></p>
+    <p><label>Biomes (comma separated)<br><input name="biomes" placeholder="forest, river, alpine_meadow"></label></p>
+    <p><label>Image URLs (one per line)<br><textarea name="images" rows="4" cols="40"></textarea></label></p>
+
+    <p><button type="submit">Add Trail</button></p>
+  </form>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDoc, setDoc, serverTimestamp, GeoPoint } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig, doc, auth, onAuthStateChanged } from "../Scripts/great_outdoors.js";
+
+    const db = getFirestore(initializeApp(firebaseConfig));
+    const status = document.getElementById("status");
+    const f = document.getElementById("trail-form");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = `login.html?redirect=add_trail.html`;
+      } else {
+          f.length_mi.addEventListener("change", () => {
+          f.length_mi.value = parseFloat(f.length_mi.value).toFixed(1);
+        });
+
+        f.est_time_hr.addEventListener("change", () => {
+          f.est_time_hr.value = parseFloat(f.est_time_hr.value).toFixed(1);
+        });
+
+
+        document.getElementById("trail-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          status.textContent = "Saving...";
+          const f = e.target;
+
+          const trail = {};
+
+          // Required
+          trail.name           = f.name.value.trim();
+          trail.length_mi      = parseFloat(f.length_mi.value);
+          trail.elevation_gain = parseInt(f.elevation_gain.value);
+          trail.trail_type     = f.trail_type.value;
+          trail.location       = new GeoPoint(parseFloat(f.lat.value), parseFloat(f.lng.value));
+
+          // Optional — only include if filled in
+          if (f.start_elev_ft.value)   trail.start_elev_ft  = parseInt(f.start_elev_ft.value);
+          if (f.roughness.value)       trail.roughness       = parseInt(f.roughness.value);
+          if (f.est_time_hr.value)     trail.est_time_hr     = parseFloat(f.est_time_hr.value);
+          if (f.description.value)     trail.description     = f.description.value.trim();
+          if (f.associated_org.value)  trail.associated_org  = f.associated_org.value.trim();
+
+          if (f.hours_open.value || f.hours_close.value || f.hours_notes.value) {
+            trail.opening_hours = {
+              open:  f.hours_open.value  || "",
+              close: f.hours_close.value || "",
+              notes: f.hours_notes.value || "",
+            };
+          }
+
+          trail.surfaces = f.surfaces.value ? f.surfaces.value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          trail.biomes   = f.biomes.value   ? f.biomes.value.split(",").map(s => s.trim()).filter(Boolean)   : [];
+          trail.images   = f.images.value   ? f.images.value.split("\n").map(s => s.trim()).filter(Boolean)  : [];
+
+          trail.created_at = serverTimestamp();
+          trail.updated_at = serverTimestamp();
+          trail.updated_by = auth.currentUser.email;
+
+          try {
+            const editId = new URLSearchParams(window.location.search).get("edit");
+            if (editId) {
+              delete trail.created_at;
+              await setDoc(doc(db, "trails", editId), { ...trail, updated_at: serverTimestamp() }, { merge: true });
+              status.textContent = "Trail updated!";
+              window.location.href = `trail.html?id=${editId}`;
+            } else {
+              const ref = await addDoc(collection(db, "trails"), trail);
+              status.textContent = "Trail added! ID: " + ref.id;
+              window.location.href = `trail.html?id=${ref.id}`;
+            }
+            e.target.reset();
+          } catch (err) {
+            status.textContent = "Error: " + err.message;
+          }
+        });
+
+        const editId = new URLSearchParams(window.location.search).get("edit");
+        if (editId) {
+          const snap = await getDoc(doc(db, "trails", editId));
+          if (snap.exists()) {
+            const t = snap.data();
+            f.name.value          = t.name ?? "";
+            f.length_mi.value     = t.length_mi ?? "";
+            f.elevation_gain.value= t.elevation_gain ?? "";
+            f.trail_type.value    = t.trail_type ?? "";
+            f.lat.value           = t.location?.latitude ?? "";
+            f.lng.value           = t.location?.longitude ?? "";
+            f.start_elev_ft.value = t.start_elev_ft ?? "";
+            f.roughness.value     = t.roughness ?? "";
+            f.hours_open.value    = t.opening_hours?.open ?? "";
+            f.hours_close.value   = t.opening_hours?.close ?? "";
+            f.hours_notes.value   = t.opening_hours?.notes ?? "";
+            f.est_time_hr.value   = t.est_time_hr ?? "";
+            f.description.value   = t.description ?? "";
+            f.associated_org.value= t.associated_org ?? "";
+            f.surfaces.value      = t.surfaces?.join(", ") ?? "";
+            f.biomes.value        = t.biomes?.join(", ") ?? "";
+            f.images.value        = t.images?.join("\n") ?? "";
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

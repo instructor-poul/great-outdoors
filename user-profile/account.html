@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Account Page</title>
+  <link rel="stylesheet" href="account.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="account.html">Account</a>
+  </nav>
+
+  <main class="container">
+    <h1>User Account Page</h1>
+
+    <section class="profile-card">
+      <img id="avatarPreview" src="https://via.placeholder.com/120" alt="User avatar" />
+
+      <h2 id="displayName">Guest User</h2>
+      <p id="displayBio">No bio added yet.</p>
+
+      <div class="links">
+        <a id="displayInstagram" href="#" target="_blank">Instagram</a>
+        <a id="displayGithub" href="#" target="_blank">GitHub</a>
+        <a id="displayWebsite" href="#" target="_blank">Website</a>
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>Edit Public Profile</h2>
+
+      <form id="profileForm">
+        <label>Display Name</label>
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+
+        <label>Avatar Image URL</label>
+        <input type="url" id="avatarInput" placeholder="https://example.com/avatar.jpg" />
+
+        <label>Bio</label>
+        <textarea id="bioInput" placeholder="Write a short bio"></textarea>
+
+        <label>Instagram Link</label>
+        <input type="url" id="instagramInput" placeholder="https://instagram.com/username" />
+
+        <label>GitHub Link</label>
+        <input type="url" id="githubInput" placeholder="https://github.com/username" />
+
+        <label>Website Link</label>
+        <input type="url" id="websiteInput" placeholder="https://example.com" />
+
+        <button type="submit">Save Profile</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="account.js"></script>
+</body>
+</html>
