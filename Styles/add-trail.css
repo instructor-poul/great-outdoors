@@ -1,0 +1,221 @@
+/* ============================================
+   add-trail.css — Add/Edit Trail page styles
+   Does NOT depend on hiking-auth.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+  --trail-bark:  #3B2A1A;
+  --trail-pine:  #2D5016;
+  --trail-sage:  #6B8F4E;
+  --trail-stone: #8C7B6B;
+  --trail-mist:  #E8EDE4;
+  --trail-cream: #F5F2ED;
+  --trail-gold:  #C8933A;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--trail-mist);
+  font-family: 'Lato', sans-serif;
+  color: var(--trail-bark);
+  min-height: 100vh;
+}
+
+/* ── Page header ── */
+.page-header {
+  background: var(--trail-pine);
+  padding: 2rem 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--trail-pine) 0%, var(--trail-sage) 50%, var(--trail-gold) 100%);
+}
+.page-header-mountains {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.page-header-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.15;
+}
+.page-header p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 0.35rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+/* ── Form wrapper ── */
+.form-wrapper {
+  max-width: 700px;
+  margin: 2.5rem auto 4rem;
+  padding: 0 1.5rem;
+}
+
+#status {
+  font-size: 13px;
+  color: var(--trail-stone);
+  margin-bottom: 1rem;
+  min-height: 1.2em;
+  font-style: italic;
+}
+
+/* ── Cards ── */
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(59,42,26,0.09);
+  margin-bottom: 1.5rem;
+}
+
+.form-card-header {
+  background: var(--trail-pine);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.25rem;
+}
+
+.form-card-body {
+  padding: 1.25rem 1.25rem 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.25rem;
+}
+
+.form-card-body.single-col {
+  grid-template-columns: 1fr;
+}
+
+/* ── Field ── */
+.field {
+  margin-bottom: 1rem;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--trail-stone);
+  margin-bottom: 5px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1.5px solid #E0DDD8;
+  border-radius: 7px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--trail-bark);
+  background: var(--trail-cream);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--trail-pine);
+  background: #fff;
+}
+
+.field input:invalid,
+.field select:invalid,
+.field textarea:invalid {
+  border-color: #c0392b;
+}
+
+.field input:valid,
+.field select:valid {
+  border-color: #aac98a;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C7B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+/* ── Required asterisk ── */
+.req { color: var(--trail-gold); margin-left: 2px; }
+
+/* ── Submit button ── */
+.submit-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 28px;
+  background: var(--trail-pine);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.submit-btn:hover  { background: #1e3a0d; }
+.submit-btn:active { transform: scale(0.98); }
+
+@media (max-width: 560px) {
+  .form-card-body { grid-template-columns: 1fr; }
+  .field.full { grid-column: 1; }
+}

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Trail</title>
+  <link rel="stylesheet" href="../Styles/trail.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
 <body>
 
@@ -11,46 +13,111 @@
        Add/remove/rearrange elements here to change
        what the page shows and in what order.
   ════════════════════════════════════════════════ -->
-  <p id="status">Loading...</p>
+
+  <div id="status" class="status-screen">
+    <div class="spinner"></div>
+    <span>Loading trail…</span>
+  </div>
 
   <div id="content" style="display:none">
 
-    <!-- Trail actions -->
-    <a id="edit-trail-btn"></a>
-
-    <!-- Core info -->
-    <h1 id="name"></h1>
-    <p id="org"></p>
-    <p id="type"></p>
-    <p id="length"></p>
-    <p id="gain"></p>
-    <p id="start-elev"></p>
-    <p id="est-time"></p>
-    <p id="roughness"></p>
-    <p id="hours"></p>
-    <p id="location"></p>
-    <p id="surfaces"></p>
-    <p id="biomes"></p>
-    <p id="description"></p>
-
-    <!-- Media -->
-    <div id="images"></div>
-
-    <!-- Metadata -->
-    <p id="last-edited"></p>
-
-    <hr>
-
-    <!-- Comments -->
-    <h3>Comments</h3>
-    <div id="comments"></div>
-    <div id="comment-form" style="display:none">
-      <textarea id="comment-input" rows="3" cols="40" maxlength="1000" placeholder="Write a comment..."></textarea><br>
-      <button id="comment-submit">Post</button>
+    <!-- Header -->
+    <div class="trail-header">
+      <svg class="header-mountains" viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+        <polygon points="0,120 120,30 240,80 380,10 520,60 660,20 800,70 800,120" fill="#fff"/>
+      </svg>
+      <div class="trail-header-inner">
+        <a id="edit-trail-btn"><i class="ti ti-edit"></i> Edit Trail</a>
+        <div id="name"></div>
+        <p id="org"></p>
+      </div>
     </div>
-    <p id="comment-login">You must be <a href="login.html">logged in</a> to comment.</p>
 
-  </div>
+    <!-- Stat strip -->
+    <div class="stat-strip">
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-length">—</span>
+        <span class="stat-strip-lbl">Miles</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-gain">—</span>
+        <span class="stat-strip-lbl">Elev. Gain</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-type">—</span>
+        <span class="stat-strip-lbl">Type</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-time">—</span>
+        <span class="stat-strip-lbl">Est. Hours</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="trail-body">
+
+      <!-- Main column -->
+      <div class="trail-main">
+
+        <div id="images"></div>
+
+        <span class="section-label" id="desc-label" style="display:none">About this trail</span>
+        <p id="description"></p>
+
+        <div class="tag-section" id="surfaces-section" style="display:none">
+          <span class="section-label">Surfaces</span>
+          <div class="tag-row" id="surfaces"></div>
+        </div>
+
+        <div class="tag-section" id="biomes-section" style="display:none">
+          <span class="section-label">Biomes</span>
+          <div class="tag-row" id="biomes"></div>
+        </div>
+
+        <p id="last-edited"></p>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="trail-sidebar">
+        <div class="info-card">
+          <div class="info-card-header">Trail Details</div>
+          <div class="info-row" id="row-type" style="display:none">
+            <span class="info-row-label">Type</span>
+            <span class="info-row-value" id="type"></span>
+          </div>
+          <div class="info-row" id="row-start-elev" style="display:none">
+            <span class="info-row-label">Starting Elev.</span>
+            <span class="info-row-value" id="start-elev"></span>
+          </div>
+          <div class="info-row" id="row-roughness" style="display:none">
+            <span class="info-row-label">Roughness</span>
+            <span class="info-row-value"><div class="pip-row" id="roughness"></div></span>
+          </div>
+          <div class="info-row" id="row-hours" style="display:none">
+            <span class="info-row-label">Hours</span>
+            <span class="info-row-value" id="hours"></span>
+          </div>
+          <div class="info-row" id="row-location" style="display:none">
+            <span class="info-row-label">GPS</span>
+            <span class="info-row-value" id="location"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments (full width) -->
+      <div class="comments-section">
+        <h3>Comments</h3>
+        <div id="comments"></div>
+        <div id="comment-form" style="display:none">
+          <textarea id="comment-input" rows="3" maxlength="1000" placeholder="Write a comment…"></textarea>
+          <button id="comment-submit"><i class="ti ti-send"></i> Post</button>
+        </div>
+        <p id="comment-login">You must be <a href="login.html">logged in</a> to comment.</p>
+      </div>
+
+    </div><!-- /trail-body -->
+  </div><!-- /content -->
 
 
   <script type="module">
@@ -68,43 +135,99 @@
     // ════════════════════════════════════════════════
 
     function renderTrail(t, id) {
-      document.title                                    = t.name;
-      document.getElementById("name").textContent       = t.name;
-      document.getElementById("org").textContent        = t.associated_org ?? "";
-      document.getElementById("type").textContent       = "Type: "           + t.trail_type;
-      document.getElementById("length").textContent     = "Length: "         + t.length_mi + " mi";
-      document.getElementById("gain").textContent       = "Elevation gain: " + t.elevation_gain + " ft";
-      document.getElementById("start-elev").textContent = t.start_elev_ft   ? "Starting elev: " + t.start_elev_ft + " ft" : "";
-      document.getElementById("est-time").textContent   = t.est_time_hr     ? "Est. time: "      + t.est_time_hr   + " hr (±50%)" : "";
-      document.getElementById("roughness").textContent  = t.roughness       ? "Roughness: "      + t.roughness     + "/10" : "";
-      document.getElementById("location").textContent   = t.location        ? "Location: "       + t.location.latitude + ", " + t.location.longitude : "";
-      document.getElementById("surfaces").textContent   = t.surfaces?.length ? "Surfaces: "      + t.surfaces.join(", ") : "";
-      document.getElementById("biomes").textContent     = t.biomes?.length  ? "Biomes: "         + t.biomes.join(", ") : "";
-      document.getElementById("description").textContent = t.description ?? "";
+      document.title = t.name;
+      document.getElementById("name").textContent = t.name;
+      document.getElementById("org").textContent  = t.associated_org ?? "";
 
-      document.getElementById("hours").textContent = t.opening_hours
-        ? "Hours: " + (t.opening_hours.open + "–" + t.opening_hours.close + " " + (t.opening_hours.notes ?? "")).trim()
-        : "";
+      // Stat strip
+      document.getElementById("stat-length").textContent = t.length_mi      ? t.length_mi + " mi"                      : "—";
+      document.getElementById("stat-gain").textContent   = t.elevation_gain ? t.elevation_gain.toLocaleString() + " ft" : "—";
+      document.getElementById("stat-type").textContent   = formatType(t.trail_type);
+      document.getElementById("stat-time").textContent   = t.est_time_hr    ? t.est_time_hr + " hr"                     : "—";
 
+      // Sidebar details
+      if (t.trail_type) {
+        document.getElementById("type").textContent      = formatType(t.trail_type);
+        document.getElementById("row-type").style.display = "";
+      }
+      if (t.start_elev_ft) {
+        document.getElementById("start-elev").textContent       = t.start_elev_ft.toLocaleString() + " ft";
+        document.getElementById("row-start-elev").style.display = "";
+      }
+      if (t.roughness) {
+        const bar = document.getElementById("roughness");
+        for (let i = 1; i <= 10; i++) {
+          const pip = document.createElement("div");
+          pip.className = "pip" + (i <= t.roughness ? " on" : "");
+          bar.appendChild(pip);
+        }
+        document.getElementById("row-roughness").style.display = "";
+      }
+      if (t.opening_hours) {
+        const h = t.opening_hours;
+        document.getElementById("hours").textContent      = (h.open && h.close ? h.open + "–" + h.close : "") + (h.notes ? " " + h.notes : "");
+        document.getElementById("row-hours").style.display = "";
+      }
+      if (t.location) {
+        document.getElementById("location").textContent       = t.location.latitude.toFixed(4) + ", " + t.location.longitude.toFixed(4);
+        document.getElementById("row-location").style.display = "";
+      }
+
+      // Description
+      if (t.description) {
+        document.getElementById("description").textContent  = t.description;
+        document.getElementById("desc-label").style.display = "";
+      }
+
+      // Surfaces tags
+      if (t.surfaces?.length) {
+        const row = document.getElementById("surfaces");
+        t.surfaces.forEach(s => {
+          const span = document.createElement("span");
+          span.className   = "tag";
+          span.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+          row.appendChild(span);
+        });
+        document.getElementById("surfaces-section").style.display = "";
+      }
+
+      // Biomes tags
+      if (t.biomes?.length) {
+        const row = document.getElementById("biomes");
+        t.biomes.forEach(b => {
+          const span = document.createElement("span");
+          span.className   = "tag";
+          span.textContent = b.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+          row.appendChild(span);
+        });
+        document.getElementById("biomes-section").style.display = "";
+      }
+
+      // Images
+      const imagesDiv = document.getElementById("images");
+      (t.images ?? []).forEach(url => {
+        const img   = document.createElement("img");
+        img.src     = url;
+        img.alt     = t.name;
+        img.loading = "lazy";
+        imagesDiv.appendChild(img);
+      });
+
+      // Last edited
       if (t.updated_by && t.updated_at) {
         const date = t.updated_at.toDate().toLocaleDateString();
         document.getElementById("last-edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
       }
+    }
 
-      const imagesDiv = document.getElementById("images");
-      (t.images ?? []).forEach(url => {
-        const img = document.createElement("img");
-        img.src   = url;
-        img.width = 300;
-        imagesDiv.appendChild(img);
-      });
+    function formatType(t) {
+      return { loop: "Loop", out_and_back: "Out & Back", point_to_point: "Point to Point", lollipop: "Lollipop" }[t] ?? t;
     }
 
     function renderEditButton(id, user) {
-      const btn  = document.getElementById("edit-trail-btn");
-      btn.textContent = "Edit Trail";
-      btn.href = user
-        ? `add_trail.html?edit=${id}`
+      const btn = document.getElementById("edit-trail-btn");
+      btn.href  = user
+        ? `add-trail.html?edit=${id}`
         : `login.html?redirect=trail.html?id=${id}`;
     }
 
@@ -113,15 +236,32 @@
       const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
 
       const div = document.createElement("div");
-      div.id    = `comment-${d.id}`;
+      div.className = "comment-item";
+      div.id        = `comment-${d.id}`;
 
-      const p = document.createElement("p");
-      p.textContent = `${c.username ?? c.email} (${date})${c.edited ? " (edited)" : ""}: ${c.contents}`;
-      div.appendChild(p);
+      const meta       = document.createElement("div");
+      meta.className   = "comment-meta";
+      meta.textContent = `${c.username ?? c.email} · ${date}`;
+      if (c.edited) {
+        const badge       = document.createElement("span");
+        badge.className   = "comment-edited-badge";
+        badge.textContent = "edited";
+        meta.appendChild(badge);
+      }
+
+      const body       = document.createElement("div");
+      body.className   = "comment-body";
+      body.textContent = c.contents;
+
+      div.appendChild(meta);
+      div.appendChild(body);
 
       if (user && user.uid === c.uid) {
+        const actions     = document.createElement("div");
+        actions.className = "comment-actions";
 
         const deleteBtn       = document.createElement("button");
+        deleteBtn.className   = "comment-btn delete";
         deleteBtn.textContent = "Delete";
         deleteBtn.addEventListener("click", async () => {
           await deleteDoc(doc(db, "comments", d.id));
@@ -129,34 +269,48 @@
         });
 
         const editBtn       = document.createElement("button");
+        editBtn.className   = "comment-btn";
         editBtn.textContent = "Edit";
         editBtn.addEventListener("click", () => {
           const input  = document.createElement("textarea");
+          input.className = "comment-edit-area";
           input.value  = c.contents;
           input.rows   = 3;
           input.cols   = 40;
 
           const saveBtn       = document.createElement("button");
+          saveBtn.className   = "comment-btn";
           saveBtn.textContent = "Save";
           saveBtn.addEventListener("click", async () => {
             const newText = input.value.trim();
             if (!newText) return;
             await updateDoc(doc(db, "comments", d.id), { contents: newText, edited: true });
-            p.textContent = `${c.email} (${date}) (edited): ${newText}`;
-            div.replaceChildren(p, deleteBtn, editBtn);
+            body.textContent = newText;
+            if (!meta.querySelector(".comment-edited-badge")) {
+              const badge       = document.createElement("span");
+              badge.className   = "comment-edited-badge";
+              badge.textContent = "edited";
+              meta.appendChild(badge);
+            }
+            actions.replaceChildren(deleteBtn, editBtn);
+            div.replaceChildren(meta, body, actions);
           });
 
           const cancelBtn       = document.createElement("button");
+          cancelBtn.className   = "comment-btn";
           cancelBtn.textContent = "Cancel";
           cancelBtn.addEventListener("click", () => {
-            div.replaceChildren(p, deleteBtn, editBtn);
+            actions.replaceChildren(deleteBtn, editBtn);
+            div.replaceChildren(meta, body, actions);
           });
 
-          div.replaceChildren(input, saveBtn, cancelBtn);
+          actions.replaceChildren(saveBtn, cancelBtn);
+          div.replaceChildren(meta, input, actions);
         });
 
-        div.appendChild(deleteBtn);
-        div.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+        actions.appendChild(editBtn);
+        div.appendChild(actions);
       }
 
       commentsDiv.appendChild(div);
