@@ -1,7 +1,6 @@
 # Product Backlog – Create Team Firebase Project
 
 ## User Story
-
 **As a** student development team  
 **We want** a shared Firebase project created  
 **So that** team members can collaborate on website hosting and deployment.
