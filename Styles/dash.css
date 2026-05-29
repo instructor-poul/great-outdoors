@@ -75,3 +75,123 @@
 }
 .logout-btn:hover  { background: #1e3a0d; }
 .logout-btn:active { transform: scale(0.98); }
+
+
+.user-email-display {
+  font-size: 13px;
+  color: var(--trail-stone);
+  font-weight: 300;
+  margin-top: 0.15rem;
+}
+
+.user-identity-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--trail-cream);
+  border: 1.5px solid #E0DDD8;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--trail-pine);
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.user-identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-identity-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--trail-bark);
+  font-family: 'Playfair Display', serif;
+}
+
+.user-identity-meta {
+  font-size: 12px;
+  color: var(--trail-stone);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.profile-section {
+  background: var(--trail-cream);
+  border: 1.5px solid #E0DDD8;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profile-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--trail-stone);
+  margin-bottom: 0.25rem;
+}
+
+.profile-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profile-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--trail-stone);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-label i {
+  font-size: 14px;
+  color: var(--trail-sage);
+}
+
+.profile-input {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1.5px solid #E0DDD8;
+  border-radius: 7px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--trail-bark);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+
+.profile-input:focus {
+  border-color: var(--trail-pine);
+}
+
+.profile-input::placeholder {
+  color: #B5AFA8;
+}
