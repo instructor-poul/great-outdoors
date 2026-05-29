@@ -182,7 +182,7 @@
         const lat = t.location.latitude;
         const lng = t.location.longitude;
 
-        document.getElementById("row-location").style.display = "";
+        document.getElementById("row-location").style.display = "flex";
 
         // Wait for element to be visible before initialising Leaflet
         requestAnimationFrame(() => {
@@ -216,6 +216,7 @@
           });
 
           L.marker([lat, lng], { icon: pin }).addTo(map);
+          setTimeout(() => map.invalidateSize(), 100);
         });
 
         // Reverse geocode - where are we by name?
@@ -241,7 +242,8 @@
           if (bar) bar.textContent = place;
         })
         .catch(() => {
-          // Silently fail — not critical
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
         });
       }
 
@@ -476,8 +478,6 @@
             };
           })
         );
-
-        console.log(commentsWithUsers);
 
         onAuthStateChanged(auth, (user) => {
           renderEditButton(id, user);
