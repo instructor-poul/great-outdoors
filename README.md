@@ -24,6 +24,8 @@ Founded in **2024**, **The Great Outdoors** aims to:
 
 ## 🧭 Vision
 
+## Test
+
 By combining education, thoughtful design, and up-to-date trail data, The Great Outdoors seeks to create a more balanced, informed, and respectful outdoor community across the Pacific Northwest.
 
 ## 📄 License
