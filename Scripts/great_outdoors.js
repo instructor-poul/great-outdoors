@@ -421,13 +421,22 @@ window.logout = function () {
 
 
 // Protect Dashboard
-onAuthStateChanged(auth, (user) => {
-
-  if (
-    window.location.pathname.includes("dashboard.html")
-    && !user
-  ) {
+onAuthStateChanged(auth, async (user) => {
+  if (window.location.pathname.includes("dashboard.html") && !user) {
     window.location.href = "login.html";
+    return;
+  }
+
+  if (window.location.pathname.includes("dashboard.html") && user) {
+    document.getElementById("user-email").textContent = user.email ?? "";
+
+    // Fetch username from Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    const username = userDoc.exists() ? userDoc.data().username : user.email.split("@")[0];
+
+    document.getElementById("greeting").textContent = `Welcome back, ${username}!`;
+    document.getElementById("user-display-name").textContent = username;
+    document.getElementById("user-avatar").textContent = username.charAt(0).toUpperCase();
   }
 });
 
