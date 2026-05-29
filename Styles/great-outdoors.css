@@ -131,13 +131,7 @@ a { text-decoration: none; }
    ============================================ */
 
 /* auth-specific reset */
-.auth-wrapper input,
-.auth-wrapper button,
-.auth-wrapper a,
-.auth-wrapper span,
-.auth-wrapper p,
-.auth-wrapper div,
-.auth-wrapper label {
+.auth-wrapper input {
   all: unset;
   box-sizing: border-box;
 }
