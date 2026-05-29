@@ -102,8 +102,15 @@
             <span class="info-row-label">Hours</span>
             <span class="info-row-value" id="hours"></span>
           </div>
-          <div class="info-row" id="row-location" style="display:none">
+          <div class="info-row" id="row-location" style="display:none; flex-direction: column; align-items: stretch;">
             <div id="trail-map" class="trail-map"></div>
+            <p id="location-label" style="
+              font-size: 11px;
+              color: var(--trail-stone);
+              text-align: center;
+              padding: 0.4rem 0 0;
+              letter-spacing: 0.04em;
+            "></p>
           </div>
         </div>
       </div>
@@ -209,6 +216,32 @@
           });
 
           L.marker([lat, lng], { icon: pin }).addTo(map);
+        });
+
+        // Reverse geocode - where are we by name?
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+          { headers: {
+            "Accept-Language": "en",
+            "User-Agent": "GreatOutdoorsPNWStudentProject/1.0"
+          } }
+        )
+        .then(r => r.json())
+        .then(data => {
+          const a = data.address;
+
+          // Build a readable location string from most to least specific
+          const place = [
+            a.natural | a.leisure || a.village || a.town || a.city || a.county || a.state_district,
+            a.state || a.province,
+            a.country,
+          ].filter(Boolean).join(", ");
+
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = place;
+        })
+        .catch(() => {
+          // Silently fail — not critical
         });
       }
 
