@@ -450,3 +450,41 @@ function showAlt(x) {
 function hideAlt(x) {
   document.getElementById("alttext").innerHTML="";
 }
+
+
+
+
+async function initNav() {
+  const container = document.getElementById("site-nav-container");
+  if (!container) return;
+
+  const res  = await fetch("../Components/nav.html");
+  const html = await res.text();
+  container.innerHTML = html;
+
+  // Highlight active link
+  const links = container.querySelectorAll(".site-nav-link");
+  links.forEach(link => {
+    if (link.href === window.location.href) link.classList.add("active");
+  });
+
+  // Swap login/dashboard based on auth state
+  onAuthStateChanged(auth, (user) => {
+    const authLink  = document.getElementById("nav-auth-link");
+    const authIcon  = document.getElementById("nav-auth-icon");
+    const authLabel = document.getElementById("nav-auth-label");
+    if (!authLink) return;
+
+    if (user) {
+      authLink.href         = "../Pages/dashboard.html";
+      authIcon.className    = "ti ti-layout-dashboard";
+      authLabel.textContent = "Dashboard";
+    } else {
+      authLink.href         = "../Pages/login.html";
+      authIcon.className    = "ti ti-user";
+      authLabel.textContent = "Login";
+    }
+  });
+}
+
+initNav();
