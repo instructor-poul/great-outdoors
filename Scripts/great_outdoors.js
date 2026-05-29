@@ -14,6 +14,7 @@ import {
   orderBy,
   GeoPoint,
   serverTimestamp,
+  writeBatch,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -389,6 +390,7 @@ window.saveProfile = async function () {
     return;
   }
 
+  const username  = document.getElementById("profile-username").value.trim();
   const bio = document.getElementById("profile-bio").value.trim();
   const avatar = document.getElementById("profile-avatar").value.trim();
   const instagram = document.getElementById("profile-instagram").value.trim();
@@ -396,11 +398,20 @@ window.saveProfile = async function () {
   try {
 
     await updateDoc(doc(db, "users", user.uid), {
+      username: username,
       bio: bio,
       avatar: avatar,
       instagram: instagram,
       updated_at: serverTimestamp()
     });
+
+    if (username) {
+      const q        = query(collection(db, "comments"), where("uid", "==", user.uid));
+      const snap     = await getDocs(q);
+      const batch    = writeBatch(db);
+      snap.forEach(d => batch.update(d.ref, { username }));
+      await batch.commit();
+    }
 
     alert("Profile updated!");
 

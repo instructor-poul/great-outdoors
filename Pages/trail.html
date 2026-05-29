@@ -391,21 +391,10 @@
           orderBy("created_at", "asc")
         );
         const commentSnap = await getDocs(q);
-        const commentsWithUsers = await Promise.all(
-          commentSnap.docs.map(async (commentDoc) => {
-            const commentData = commentDoc.data();
-
-            const userSnap = await getDoc(doc(db, "users", commentData.uid));
-
-            const userData = userSnap.data();
-
-            return {
-              id: commentDoc.id,
-              ...commentData,
-              username: userData?.username || userData?.email || "Unknown User",
-            };
-          })
-        );
+        const commentsWithUsers = commentSnap.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        }));
 
         console.log(commentsWithUsers);
 
