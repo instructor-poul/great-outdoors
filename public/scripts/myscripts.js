@@ -1,4 +1,3 @@
-
 function showAlt(x) {
   document.getElementById("alttext").innerHTML=x.alt;
 }
