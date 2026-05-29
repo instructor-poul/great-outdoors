@@ -379,7 +379,35 @@ window.login = function () {
     });
 };
 
+// SAVE USER PROFILE
+window.saveProfile = async function () {
 
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("You must be logged in.");
+    return;
+  }
+
+  const bio = document.getElementById("profile-bio").value.trim();
+  const avatar = document.getElementById("profile-avatar").value.trim();
+  const instagram = document.getElementById("profile-instagram").value.trim();
+
+  try {
+
+    await updateDoc(doc(db, "users", user.uid), {
+      bio: bio,
+      avatar: avatar,
+      instagram: instagram,
+      updated_at: serverTimestamp()
+    });
+
+    alert("Profile updated!");
+
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
 // LOGOUT
 window.logout = function () {

@@ -231,13 +231,12 @@
         : `login.html?redirect=trail.html?id=${id}`;
     }
 
-    function renderComment(d, user, commentsDiv) {
-      const c    = d.data();
+    function renderComment(c, user, commentsDiv) {
       const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
 
       const div = document.createElement("div");
       div.className = "comment-item";
-      div.id        = `comment-${d.id}`;
+      div.id        = `comment-${c.id}`;
 
       const meta       = document.createElement("div");
       meta.className   = "comment-meta";
@@ -264,7 +263,7 @@
         deleteBtn.className   = "comment-btn delete";
         deleteBtn.textContent = "Delete";
         deleteBtn.addEventListener("click", async () => {
-          await deleteDoc(doc(db, "comments", d.id));
+          await deleteDoc(doc(db, "comments", c.id));
           div.remove();
         });
 
@@ -284,7 +283,7 @@
           saveBtn.addEventListener("click", async () => {
             const newText = input.value.trim();
             if (!newText) return;
-            await updateDoc(doc(db, "comments", d.id), { contents: newText, edited: true });
+            await updateDoc(doc(db, "comments", c.id), { contents: newText, edited: true });
             body.textContent = newText;
             if (!meta.querySelector(".comment-edited-badge")) {
               const badge       = document.createElement("span");
@@ -390,12 +389,29 @@
           orderBy("created_at", "asc")
         );
         const commentSnap = await getDocs(q);
+        const commentsWithUsers = await Promise.all(
+          commentSnap.docs.map(async (commentDoc) => {
+            const commentData = commentDoc.data();
+
+            const userSnap = await getDoc(doc(db, "users", commentData.uid));
+
+            const userData = userSnap.data();
+
+            return {
+              id: commentDoc.id,
+              ...commentData,
+              username: userData?.username || userData?.email || "Unknown User",
+            };
+          })
+        );
+
+        console.log(commentsWithUsers);
 
         onAuthStateChanged(auth, (user) => {
           renderEditButton(id, user);
           renderCommentForm(user, db, id, commentsDiv, q);
           commentsDiv.innerHTML = "";
-          commentSnap.forEach(d => renderComment(d, user, commentsDiv));
+          commentsWithUsers.forEach(d => renderComment(d, user, commentsDiv));
         });
       }
     }
