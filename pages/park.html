@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to the Great Outdoors!</title>
+    <link rel="stylesheet" type="text/css" href="../styles/toplevel.css">
+    <link rel="stylesheet" type="text/css" href="../styles/branchlevel.css">
+    <script src="../scripts/myscripts.js"></script>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <a href="../index.html"><img class="go-logo" src="../images/go-logo.svg" alt="great outdoors logo"></a>
+            <a href="../index.html"><p>The Great Outdoors</p></a>
+        </div>
+        <div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Retreat in the Park</h1>
+                <p>Find calm green spaces and relaxing picnic spots near the heart of the Pacific Northwest.</p>
+            </div>
+        </div>
+        <div class="overlay"></div>
+        <img class="hero-image" src="../images/park.jpg" alt="Park scene">
+    </div>
+
+    <div class="page-body">
+        <div class="page-card">
+            <img class="trail-image" src="../images/park.jpg" alt="Park" onmouseover="showAlt(this)" onmouseout="hideAlt(this)">
+            <figcaption>Read Up</figcaption>
+            <p id="alttext"></p>
+            <div class="page-nav">
+                <a href="../index.html">Back to Table of Contents</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
