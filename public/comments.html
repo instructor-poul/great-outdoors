@@ -1,0 +1,27 @@
+Html
+<section id="comments-section">
+    <h2>leave a Comment</h2>
+
+<textarea id="comment-input" placeholder="Write your comment here..."></textarea>
+<button id="submit-comment">Post Comment</button>
+
+<h3>Visitor Comments</h3>
+<div id="comments-display"></div>
+</section></div><
+    
+</script>
+document.getElementById("submit-comment").addEventListener("click",function() {
+   const input =document.getElementById("comment-input");
+   const commentText = input.value.trim();
+
+   if (comentText === "") return;
+
+   const commentBox = document.createElement("div")
+   commentBox.classList.add("comment-box");
+   commentBox.textContent = commentText;
+
+   document.getElementById("comments-display").appendChild(commentBox);
+   
+   input.value = "";
+});
+</script>
