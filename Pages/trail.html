@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="../Styles/great-outdoors.css">
   <link rel="stylesheet" href="../Styles/trail.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div id="site-nav-container"></div>
@@ -100,9 +102,15 @@
             <span class="info-row-label">Hours</span>
             <span class="info-row-value" id="hours"></span>
           </div>
-          <div class="info-row" id="row-location" style="display:none">
-            <span class="info-row-label">GPS</span>
-            <span class="info-row-value" id="location"></span>
+          <div class="info-row" id="row-location" style="display:none; flex-direction: column; align-items: stretch;">
+            <div id="trail-map" class="trail-map"></div>
+            <p id="location-label" style="
+              font-size: 11px;
+              color: var(--trail-stone);
+              text-align: center;
+              padding: 0.4rem 0 0;
+              letter-spacing: 0.04em;
+            "></p>
           </div>
         </div>
       </div>
@@ -171,8 +179,72 @@
         document.getElementById("row-hours").style.display = "";
       }
       if (t.location) {
-        document.getElementById("location").textContent       = t.location.latitude.toFixed(4) + ", " + t.location.longitude.toFixed(4);
-        document.getElementById("row-location").style.display = "";
+        const lat = t.location.latitude;
+        const lng = t.location.longitude;
+
+        document.getElementById("row-location").style.display = "flex";
+
+        // Wait for element to be visible before initialising Leaflet
+        requestAnimationFrame(() => {
+          const map = L.map("trail-map", {
+            center: [lat, lng],
+            zoom: 14,
+            zoomControl: true,
+            scrollWheelZoom: false,
+          });
+
+          L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+              attribution: "Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA",
+              maxZoom: 19,
+            }
+          ).addTo(map);
+
+          // Custom green pin to match brand
+          const pin = L.divIcon({
+            className: "",
+            html: `<div style="
+              width:14px;height:14px;
+              background:var(--trail-gold);
+              border:2.5px solid #fff;
+              border-radius:50%;
+              box-shadow:0 2px 6px rgba(0,0,0,0.4);
+            "></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+          });
+
+          L.marker([lat, lng], { icon: pin }).addTo(map);
+          setTimeout(() => map.invalidateSize(), 100);
+        });
+
+        // Reverse geocode - where are we by name?
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+          { headers: {
+            "Accept-Language": "en",
+            "User-Agent": "GreatOutdoorsPNWStudentProject/1.0"
+          } }
+        )
+        .then(r => r.json())
+        .then(data => {
+          const a = data.address;
+
+          // Build a readable location string from most to least specific
+          const place = [
+            a.natural | a.leisure || a.village || a.town || a.city || a.county || a.state_district,
+            a.state || a.province,
+            a.country,
+          ].filter(Boolean).join(", ");
+
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = place;
+        })
+        .catch(() => {
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        });
       }
 
       // Description
@@ -406,8 +478,6 @@
             };
           })
         );
-
-        console.log(commentsWithUsers);
 
         onAuthStateChanged(auth, (user) => {
           renderEditButton(id, user);

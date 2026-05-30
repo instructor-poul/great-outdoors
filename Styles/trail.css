@@ -299,3 +299,11 @@
   .stat-strip-item     { min-width: 80px; padding: 0.75rem 1rem; }
   .comments-section    { grid-column: 1; }
 }
+
+.trail-map {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #E0DDD8;
+}
