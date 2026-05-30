@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="../Styles/great-outdoors.css">
   <link rel="stylesheet" href="../Styles/add-trail.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div id="site-nav-container"></div>
@@ -58,14 +60,33 @@
             </select>
           </div>
 
-          <div class="field">
-            <label>Latitude <span class="req">*</span></label>
-            <input name="lat" type="number" step="any" min="-90" max="90" required>
-          </div>
+          <div class="field full">
+            <label>Location <span class="req">*</span></label>
 
-          <div class="field">
-            <label>Longitude <span class="req">*</span></label>
-            <input name="lng" type="number" step="any" min="-180" max="180" required>
+            <div id="location-map" style="
+              width: 100%;
+              aspect-ratio: 1;
+              border-radius: 7px;
+              overflow: hidden;
+              border: 1.5px solid #E0DDD8;
+              margin-bottom: 0.5rem;
+              cursor: crosshair;
+            "></div>
+
+            <div style="display:flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+              <input type="number" id="location-lat" class="field-input" placeholder="Latitude" step="any" style="flex:1;">
+              <input type="number" id="location-lng" class="field-input" placeholder="Longitude" step="any" style="flex:1;">
+              <button type="button" class="submit-btn" id="location-confirm" style="white-space:nowrap;">
+                <i class="ti ti-check"></i> Confirm
+              </button>
+            </div>
+
+            <p id="location-label" style="
+              font-size: 11px;
+              color: var(--trail-stone);
+              letter-spacing: 0.04em;
+              min-height: 1.2em;
+            "></p>
           </div>
 
         </div>
@@ -158,7 +179,88 @@
       if (!user) {
         window.location.href = `login.html?redirect=add-trail.html`;
       } else {
-          f.length_mi.addEventListener("change", () => {
+
+        // Initialise location picker map
+        const locationMap = L.map("location-map", {
+          center: [47.5, -121.5], // Default to PNW
+          zoom: 7,
+          scrollWheelZoom: true,
+        });
+
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            attribution: "Tiles &copy; Esri",
+            maxZoom: 19,
+          }
+        ).addTo(locationMap);
+
+        setTimeout(() => locationMap.invalidateSize(), 100);
+
+        const pin = L.divIcon({
+          className: "",
+          html: `<div style="
+            width:14px; height:14px;
+            background:var(--trail-gold);
+            border:2.5px solid #fff;
+            border-radius:50%;
+            box-shadow:0 2px 6px rgba(0,0,0,0.4);
+          "></div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        });
+
+        let marker = null;
+
+        function placePin(lat, lng) {
+          if (marker) marker.setLatLng([lat, lng]);
+          else marker = L.marker([lat, lng], { icon: pin }).addTo(locationMap);
+          locationMap.setView([lat, lng], Math.max(locationMap.getZoom(), 12));
+        }
+
+        // Click map to set coordinates
+        locationMap.on("click", e => {
+          const { lat, lng } = e.latlng;
+          document.getElementById("location-lat").value = lat.toFixed(6);
+          document.getElementById("location-lng").value = lng.toFixed(6);
+          placePin(lat, lng);
+        });
+
+        // Confirm button — move pin to typed coords + reverse geocode
+        document.getElementById("location-confirm").addEventListener("click", () => {
+          const lat = parseFloat(document.getElementById("location-lat").value);
+          const lng = parseFloat(document.getElementById("location-lng").value);
+          const label = document.getElementById("location-label");
+
+          if (isNaN(lat) || isNaN(lng)) {
+            label.textContent = "Enter valid coordinates first.";
+            return;
+          }
+
+          placePin(lat, lng);
+          label.textContent = "Looking up location…";
+
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`, {
+            headers: {
+              "Accept-Language": "en",
+              "User-Agent": "GreatOutdoorsPNW/1.0",
+            }
+          })
+          .then(r => r.json())
+          .then(data => {
+            const a = data.address;
+            const place = [
+              a.natural || a.leisure || a.village || a.town || a.city || a.county || a.state_district,
+              a.state || a.province,
+              a.country,
+            ].filter(Boolean).join(", ");
+            label.textContent = place || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          })
+          .catch(() => {
+            label.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          });
+        });
+        f.length_mi.addEventListener("change", () => {
           f.length_mi.value = parseFloat(f.length_mi.value).toFixed(1);
         });
 
@@ -179,7 +281,10 @@
           trail.length_mi      = parseFloat(f.length_mi.value);
           trail.elevation_gain = parseInt(f.elevation_gain.value);
           trail.trail_type     = f.trail_type.value;
-          trail.location       = new GeoPoint(parseFloat(f.lat.value), parseFloat(f.lng.value));
+          trail.location = new GeoPoint(
+            parseFloat(document.getElementById("location-lat").value),
+            parseFloat(document.getElementById("location-lng").value)
+          );
 
           // Optional — only include if filled in
           if (f.start_elev_ft.value)   trail.start_elev_ft  = parseInt(f.start_elev_ft.value);
@@ -233,8 +338,8 @@
             f.length_mi.value      = t.length_mi ?? "";
             f.elevation_gain.value = t.elevation_gain ?? "";
             f.trail_type.value     = t.trail_type ?? "";
-            f.lat.value            = t.location?.latitude ?? "";
-            f.lng.value            = t.location?.longitude ?? "";
+            document.getElementById("location-lat").value = t.location?.latitude ?? "";
+            document.getElementById("location-lng").value = t.location?.longitude ?? "";
             f.start_elev_ft.value  = t.start_elev_ft ?? "";
             f.roughness.value      = t.roughness ?? "";
             f.hours_open.value     = t.opening_hours?.open ?? "";
@@ -246,6 +351,13 @@
             f.surfaces.value       = t.surfaces?.join(", ") ?? "";
             f.biomes.value         = t.biomes?.join(", ") ?? "";
             f.images.value         = t.images?.join("\n") ?? "";
+            const lat = t.location?.latitude;
+            const lng = t.location?.longitude;
+            if (lat && lng) {
+              if (marker) marker.setLatLng([lat, lng]);
+              else marker = L.marker([lat, lng], { icon: pin }).addTo(locationMap);
+              locationMap.setView([lat, lng], 14);
+            }
           }
         }
       }
