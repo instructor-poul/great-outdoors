@@ -406,10 +406,17 @@ window.saveProfile = async function () {
     });
 
     if (username) {
-      const q        = query(collection(db, "comments"), where("uid", "==", user.uid));
-      const snap     = await getDocs(q);
-      const batch    = writeBatch(db);
-      snap.forEach(d => batch.update(d.ref, { username }));
+      // Comments
+      const commentQ = query(collection(db, "comments"), where("uid", "==", user.uid));
+      const commentSnap = await getDocs(commentQ);
+      const batch = writeBatch(db);
+      commentSnap.forEach(d => batch.update(d.ref, { username }));
+
+      // Trails
+      const trailQ = query(collection(db, "trails"), where("updated_by_uid", "==", user.uid));
+      const trailSnap = await getDocs(trailQ);
+      trailSnap.forEach(d => batch.update(d.ref, { updated_by_username: username }));
+
       await batch.commit();
     }
 

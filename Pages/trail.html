@@ -218,7 +218,8 @@
       // Last edited
       if (t.updated_by && t.updated_at) {
         const date = t.updated_at.toDate().toLocaleDateString();
-        document.getElementById("last-edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
+        document.getElementById("last-edited").textContent =
+          `Last edited by ${t.updated_by_username ?? t.updated_by} on ${date}`;
       }
     }
 
