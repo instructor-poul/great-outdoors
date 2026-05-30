@@ -290,7 +290,8 @@
       // Last edited
       if (t.updated_by && t.updated_at) {
         const date = t.updated_at.toDate().toLocaleDateString();
-        document.getElementById("last-edited").textContent = `Last edited by ${t.updated_by} on ${date}`;
+        document.getElementById("last-edited").textContent =
+          `Last edited by ${t.updated_by_username ?? t.updated_by} on ${date}`;
       }
     }
 
@@ -463,21 +464,10 @@
           orderBy("created_at", "asc")
         );
         const commentSnap = await getDocs(q);
-        const commentsWithUsers = await Promise.all(
-          commentSnap.docs.map(async (commentDoc) => {
-            const commentData = commentDoc.data();
-
-            const userSnap = await getDoc(doc(db, "users", commentData.uid));
-
-            const userData = userSnap.data();
-
-            return {
-              id: commentDoc.id,
-              ...commentData,
-              username: userData?.username || userData?.email || "Unknown User",
-            };
-          })
-        );
+        const commentsWithUsers = commentSnap.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        }));
 
         onAuthStateChanged(auth, (user) => {
           renderEditButton(id, user);

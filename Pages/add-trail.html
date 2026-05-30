@@ -274,6 +274,9 @@
           status.textContent = "Saving...";
           const f = e.target;
 
+          const userSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+          const username = userSnap.exists() ? userSnap.data().username : auth.currentUser.email;
+
           const trail = {};
 
           // Required
@@ -308,6 +311,8 @@
           trail.created_at = serverTimestamp();
           trail.updated_at = serverTimestamp();
           trail.updated_by = auth.currentUser.email;
+          trail.updated_by_uid      = auth.currentUser.uid;
+          trail.updated_by_username = userSnap.data().username ?? auth.currentUser.email;
 
           try {
             const editId = new URLSearchParams(window.location.search).get("edit");
