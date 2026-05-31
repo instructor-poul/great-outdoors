@@ -1,61 +1,110 @@
 /* ============================================================
-   Admin Review Moderation
-   Lists every review across every trail, newest first.
-   Admin can delete any review; user-submitted ones disappear
-   from localStorage, baked-in ones get hidden via a deletion mask.
+   Admin Review Moderation (redesigned)
+   - Section 1: New reviews awaiting moderation, highlighted
+   - Section 2: All reviews, newest first
+   - No tags on existing reviews; new reviews get a "NEW" badge
    ============================================================ */
 
-let _filter = 'all'; // 'all' | 'user' | 'baked'
-
-function reviewRowHtml(r) {
+function reviewCardHtml(r, opts = {}) {
+  const { highlight = false } = opts;
   const dateStr = r.date ? new Date(r.date).toLocaleDateString() : '';
-  const sourcePill = r._source === 'user'
-    ? '<span class="tag-soft tag-new" title="Submitted by a user">User</span>'
-    : '<span class="tag-soft tag-baked" title="Built-in sample review">Sample</span>';
-  // Each row gets data attributes so the click handler can find what to delete
+  const avgRating = Number(r.rating || 0);
   return `
-    <div class="review-row" data-source="${r._source}" data-id="${r.id}" data-trail-id="${r._trailId}">
-      <div class="review-row-main">
-        <div class="review-row-head">
-          <div class="review-row-who">
-            <span class="name">${escapeHtml(r.username || 'anonymous')}</span>
-            ${sourcePill}
-            <span class="trail-link">on <a href="trail.html?id=${r._trailId}">${escapeHtml(r._trailName || 'a trail')}</a></span>
-          </div>
-          <div class="review-row-meta">
-            ${renderStars(r.rating || 0, { size: 'sm' })}
-            <span class="date">${dateStr}</span>
+    <article class="review-card ${highlight ? 'review-card-new' : ''}"
+             data-source="${r._source}" data-id="${r.id}" data-trail-id="${r._trailId}">
+      <header class="review-card-head">
+        <div class="review-card-trail">
+          <a href="trail.html?id=${r._trailId}" class="trail-name-link">${escapeHtml(r._trailName || 'a trail')}</a>
+          ${highlight ? '<span class="badge-new">NEW</span>' : ''}
+        </div>
+        <button class="icon-btn del" data-delete-review type="button" title="Delete review"
+                aria-label="Delete review by ${escapeHtml(r.username || '')}">
+          ${sizeIcon('trash', 18)}
+        </button>
+      </header>
+      <div class="review-card-meta">
+        <div class="review-card-author">
+          <span class="avatar" aria-hidden="true">${escapeHtml((r.username || '?').charAt(0).toUpperCase())}</span>
+          <div>
+            <div class="author-name">${escapeHtml(r.username || 'anonymous')}</div>
+            <div class="author-date">${dateStr}</div>
           </div>
         </div>
-        <p class="review-row-body">${escapeHtml(r.comment || '')}</p>
+        <div class="review-card-rating">
+          ${renderStars(avgRating, { size: 'md' })}
+          <span class="rating-num">${avgRating.toFixed(1)}</span>
+        </div>
       </div>
-      <button class="icon-btn del" data-delete-review type="button" title="Delete review">
-        ${sizeIcon('trash', 18)}
-      </button>
-    </div>`;
+      <p class="review-card-body">${escapeHtml(r.comment || '')}</p>
+    </article>`;
 }
 
-function applyFilter(all) {
-  if (_filter === 'user')  return all.filter(r => r._source === 'user');
-  if (_filter === 'baked') return all.filter(r => r._source === 'baked');
-  return all;
+function statCard({ icon, label, val, boxClass }) {
+  return `
+    <div class="stat-card">
+      <div class="icon-box ${boxClass}">${icon}</div>
+      <div>
+        <p class="label">${label}</p>
+        <p class="val">${val}</p>
+      </div>
+    </div>`;
 }
 
 function render() {
   const all = Reviews.all();
-  const filtered = applyFilter(all);
-  document.getElementById('review-count').textContent = filtered.length;
+  const newReviews = all.filter(r => r._source === 'user');
+  const trailsWithReviews = new Set(all.map(r => r._trailId)).size;
+  const avgRating = all.length
+    ? (all.reduce((s, r) => s + Number(r.rating || 0), 0) / all.length).toFixed(1)
+    : '—';
 
-  const host = document.getElementById('reviews-host');
-  if (!filtered.length) {
-    host.innerHTML = `<div class="panel"><p class="empty" style="margin:0">No reviews to show.</p></div>`;
+  // Stat cards
+  document.getElementById('stat-cards').innerHTML = [
+    statCard({ icon: sizeIcon('message', 24),   label: 'Total Reviews',   val: all.length,        boxClass: 'icon-box-blue' }),
+    statCard({ icon: sizeIcon('plus', 24),      label: 'New (Awaiting)',  val: newReviews.length, boxClass: 'icon-box-leaf' }),
+    statCard({ icon: sizeIcon('mapPin', 24),    label: 'Trails Reviewed', val: trailsWithReviews, boxClass: 'icon-box-green' }),
+    statCard({ icon: sizeIcon('star', 24),      label: 'Average Rating',  val: avgRating,         boxClass: 'icon-box-brown' })
+  ].join('');
+
+  // New / awaiting moderation section
+  const newSection = document.getElementById('new-section');
+  if (newReviews.length) {
+    newSection.innerHTML = `
+      <div class="section-banner section-banner-new">
+        <div class="banner-icon">${sizeIcon('alertCircle', 24)}</div>
+        <div>
+          <h2>New Reviews Awaiting Moderation</h2>
+          <p>${newReviews.length} ${newReviews.length === 1 ? 'review has' : 'reviews have'} been submitted recently. Review and approve, or delete if inappropriate.</p>
+        </div>
+      </div>
+      <div class="review-card-grid">
+        ${newReviews.map(r => reviewCardHtml(r, { highlight: true })).join('')}
+      </div>`;
+  } else {
+    newSection.innerHTML = `
+      <div class="section-banner section-banner-empty">
+        <div class="banner-icon">${sizeIcon('shield', 24)}</div>
+        <div>
+          <h2>No New Reviews</h2>
+          <p>All caught up! New user-submitted reviews will appear here for moderation.</p>
+        </div>
+      </div>`;
+  }
+
+  // All reviews section
+  const allSection = document.getElementById('all-section');
+  if (!all.length) {
+    allSection.innerHTML = `<div class="panel"><p class="empty" style="margin:0">No reviews to show.</p></div>`;
     return;
   }
-  host.innerHTML = `<div class="panel" style="padding:0;overflow:hidden">
-    <div class="review-list-admin">
-      ${filtered.map(reviewRowHtml).join('')}
+  allSection.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap">
+      <h2 style="margin:0">All Reviews</h2>
+      <p style="font-size:0.875rem;color:var(--slate);margin:0">${all.length} total · sorted newest first</p>
     </div>
-  </div>`;
+    <div class="review-card-grid">
+      ${all.map(r => reviewCardHtml(r, { highlight: r._source === 'user' })).join('')}
+    </div>`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -69,22 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render();
 
-  // Filter dropdown
-  document.getElementById('filter-select').addEventListener('change', e => {
-    _filter = e.target.value;
-    render();
-  });
-
-  // Event-delegated delete buttons
-  document.getElementById('reviews-host').addEventListener('click', e => {
+  // Event-delegated delete buttons (covers both sections)
+  document.addEventListener('click', e => {
     const btn = e.target.closest('[data-delete-review]');
     if (!btn) return;
-    const row = btn.closest('.review-row');
-    if (!row) return;
+    const card = btn.closest('.review-card');
+    if (!card) return;
     if (!confirm('Delete this review? This cannot be undone.')) return;
-    const source = row.getAttribute('data-source');
-    const id = row.getAttribute('data-id');
-    const trailId = row.getAttribute('data-trail-id');
+    const source = card.getAttribute('data-source');
+    const id = card.getAttribute('data-id');
+    const trailId = card.getAttribute('data-trail-id');
     Reviews.remove(source, id, trailId);
     render();
   });

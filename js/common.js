@@ -121,18 +121,15 @@ const Auth = {
   }
 };
 
-/* ---------- Reviews (localStorage-backed)
-   --------------------------------------------------------
-   Funnels all review reads/writes through a single helper.
-   Until a real database is added, user-submitted reviews are kept in
-   localStorage and merged with the baked-in reviews from trails.js.
-   To swap in a backend later, only this object needs to change.
-   -------------------------------------------------------- */
-const REVIEWS_KEY        = 'tgo_user_reviews';   // user-submitted reviews
-const DELETED_BAKED_KEY  = 'tgo_deleted_baked';  // ids of baked-in reviews admin deleted
+/* ---------- Reviews (localStorage-backed) ----------
+   Funnels review reads/writes through one helper. Until a real database is
+   added, user-submitted reviews are kept in localStorage and merged with the
+   baked-in reviews from trails.js. Swap THIS object to wire up a backend later.
+*/
+const REVIEWS_KEY       = 'tgo_user_reviews';   // user-submitted reviews
+const DELETED_BAKED_KEY = 'tgo_deleted_baked';  // ids of baked-in reviews admin deleted
 
 const Reviews = {
-  // All user-submitted reviews (across all trails)
   userReviews() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY)) || []; }
     catch (e) { return []; }
@@ -140,8 +137,6 @@ const Reviews = {
   _saveUserReviews(arr) {
     localStorage.setItem(REVIEWS_KEY, JSON.stringify(arr));
   },
-
-  // IDs of baked-in reviews that have been moderated away
   _deletedBakedIds() {
     try { return JSON.parse(localStorage.getItem(DELETED_BAKED_KEY)) || []; }
     catch (e) { return []; }
@@ -149,60 +144,41 @@ const Reviews = {
   _saveDeletedBakedIds(arr) {
     localStorage.setItem(DELETED_BAKED_KEY, JSON.stringify(arr));
   },
-
-  // Returns one trail's reviews, merging baked-in (filtered for deletions)
-  // with user-submitted ones. User reviews appear first (newest at top).
   forTrail(trailId) {
     const id = Number(trailId);
     const trail = (window.trailsData || []).find(t => t.id === id);
+    const deleted = this._deletedBakedIds();
     const baked = (trail && trail.reviews ? trail.reviews : [])
       .map(r => ({ ...r, _source: 'baked', _trailId: id }))
-      .filter(r => !this._deletedBakedIds().includes(`${id}:${r.id}`));
+      .filter(r => !deleted.includes(`${id}:${r.id}`));
     const user = this.userReviews()
       .filter(r => r.trailId === id)
       .map(r => ({ ...r, _source: 'user', _trailId: id }));
-    // User reviews are newest, sort by date desc within each group
     user.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     baked.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     return [...user, ...baked];
   },
-
-  // Returns ALL reviews across all trails, newest first.
-  // Used by the admin review-moderation page.
   all() {
     const out = [];
+    const deleted = this._deletedBakedIds();
     (window.trailsData || []).forEach(t => {
       (t.reviews || []).forEach(r => {
-        if (this._deletedBakedIds().includes(`${t.id}:${r.id}`)) return;
-        out.push({
-          ...r,
-          _source: 'baked',
-          _trailId: t.id,
-          _trailName: t.name
-        });
+        if (deleted.includes(`${t.id}:${r.id}`)) return;
+        out.push({ ...r, _source: 'baked', _trailId: t.id, _trailName: t.name });
       });
     });
     const trailById = new Map((window.trailsData || []).map(t => [t.id, t]));
     this.userReviews().forEach(r => {
       const t = trailById.get(r.trailId);
-      out.push({
-        ...r,
-        _source: 'user',
-        _trailId: r.trailId,
-        _trailName: t ? t.name : '(unknown trail)'
-      });
+      out.push({ ...r, _source: 'user', _trailId: r.trailId, _trailName: t ? t.name : '(unknown trail)' });
     });
-    // Sort newest first; ISO yyyy-mm-dd strings sort lexicographically
     out.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     return out;
   },
-
-  // Add a new user-submitted review and return the saved record.
   add({ trailId, username, rating, comment }) {
     const all = this.userReviews();
-    const id = Date.now(); // simple monotonic id
     const review = {
-      id,
+      id: Date.now(),
       trailId: Number(trailId),
       username,
       rating: Number(rating),
@@ -214,8 +190,6 @@ const Reviews = {
     this._saveUserReviews(all);
     return review;
   },
-
-  // Delete a review by source + id. Returns true if anything was deleted.
   remove(source, id, trailId) {
     if (source === 'user') {
       const all = this.userReviews();
@@ -286,7 +260,6 @@ function renderHeader() {
              : ''}
          </span>
        </div>
- HEAD
        <button id="nav-logout" type="button">${sizeIcon('logout', 16)}<span>Logout</span></button>`
     : `<div class="nav-account-wrap">
          <button class="nav-account-btn" id="nav-account-btn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -299,15 +272,6 @@ function renderHeader() {
        </div>`;
 
 
-       <button id="nav-logout" type="button">
-         ${sizeIcon('logout', 16)}
-         <span>Logout</span>
-       </button>`
-    : `<a href="login.html">
-         ${sizeIcon('user', 16)}
-         <span>Login</span>
-       </a>`;
- 553056e (Fix mobile navigation responsiveness and accessibility)
 
   return `
   <header class="site-header">
@@ -373,7 +337,7 @@ function mountChrome() {
         window.location.reload();
       });
     }
- HEAD
+
     // Account dropdown toggle (shown when logged out)
     const accountBtn = document.getElementById('nav-account-btn');
     const accountDropdown = document.getElementById('nav-account-dropdown');
@@ -400,7 +364,6 @@ function mountChrome() {
       });
     }
 
-    553056e (Fix mobile navigation responsiveness and accessibility)
     // Smooth-scroll for #discover when already on home
     const discover = document.getElementById('nav-discover');
 

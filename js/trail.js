@@ -204,14 +204,13 @@ function attachFormHandlers() {
         renderReviewsSection();
         return;
       }
-      // Persist via the Reviews helper (localStorage today, real DB later).
+      // Persist via the Reviews helper (localStorage now, real DB later)
       Reviews.add({
         trailId: _trail.id,
         username: u.username,
         rating: _newRating,
         comment: text
       });
-      // Re-pull from storage so the merged list is what we show.
       _reviews = Reviews.forTrail(_trail.id);
       _newRating = 5;
       _langError = '';
@@ -222,7 +221,7 @@ function attachFormHandlers() {
 
 function renderTrail(t) {
   _trail = t;
-  // Pull the merged list (baked-in + user-submitted, minus any moderated away)
+  // Merged list: baked-in + user-submitted, minus admin-deleted
   _reviews = Reviews.forTrail(t.id);
 
   const isHiddenGem = !!t.isHiddenGem;
