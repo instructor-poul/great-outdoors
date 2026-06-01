@@ -204,14 +204,14 @@ function attachFormHandlers() {
         renderReviewsSection();
         return;
       }
-      _reviews = [{
-        id: _reviews.length + 1,
+      // Persist via the Reviews helper (localStorage now, real DB later)
+      Reviews.add({
+        trailId: _trail.id,
         username: u.username,
         rating: _newRating,
-        date: new Date().toISOString().split('T')[0],
-        comment: text,
-        helpfulCount: 0
-      }, ..._reviews];
+        comment: text
+      });
+      _reviews = Reviews.forTrail(_trail.id);
       _newRating = 5;
       _langError = '';
       renderReviewsSection();
@@ -221,7 +221,8 @@ function attachFormHandlers() {
 
 function renderTrail(t) {
   _trail = t;
-  _reviews = (t.reviews || []).slice();
+  // Merged list: baked-in + user-submitted, minus admin-deleted
+  _reviews = Reviews.forTrail(t.id);
 
   const isHiddenGem = !!t.isHiddenGem;
   const featuresHtml = (t.features && t.features.length)

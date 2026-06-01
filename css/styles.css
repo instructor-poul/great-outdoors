@@ -196,14 +196,7 @@ main { flex: 1; }
   padding: 0 1rem;
   max-width: 48rem;
 }
-.hero .safetycontent {
-  position: relative; z-index: 1;
-  text-align: center;
-  color: var(--black);
-  padding: 0 1rem;
-  max-width: 48rem;
-}
-.hero h1, .hero h2 { color: var(--black); margin-bottom: 1rem; }
+.hero h1, .hero h2 { color: var(--white); margin-bottom: 1rem; }
 .hero h1 { font-size: 2.25rem; }
 .hero h2 { font-size: 2rem; }
 .hero p { font-size: 1.125rem; }
@@ -1246,7 +1239,6 @@ tbody tr:hover { background: rgba(245, 245, 240, 0.5); }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 .mb-4 { margin-bottom: 2rem; }
- HEAD
 
 /* ---------- Account dropdown (logged-out header) ---------- */
 .nav-account-wrap {
@@ -1367,4 +1359,156 @@ tbody tr:hover { background: rgba(245, 245, 240, 0.5); }
     display: none;
   }
 }
- 553056e (Fix mobile navigation responsiveness and accessibility)
+
+/* ---------- Admin Review Moderation ---------- */
+.review-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .review-card-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1200px) {
+  .review-card-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+.review-card {
+  background: var(--white);
+  border: 1px solid var(--cream-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: box-shadow 0.15s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+}
+.review-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.review-card-new {
+  border-left: 4px solid var(--forest-dark);
+  background: linear-gradient(180deg, #fafdf5 0%, var(--white) 60%);
+}
+.review-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.review-card-trail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.trail-name-link {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--forest-dark);
+  text-decoration: none;
+}
+.trail-name-link:hover { text-decoration: underline; }
+
+.badge-new {
+  background: var(--forest-dark);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.review-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.review-card-author {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.review-card-author .avatar {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--earth-tan);
+  color: var(--forest-darkest);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.review-card-author .author-name {
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.2;
+}
+.review-card-author .author-date {
+  color: var(--slate);
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+.review-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.review-card-rating .rating-num {
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+.review-card-body {
+  color: var(--slate);
+  line-height: 1.55;
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+}
+
+.section-banner {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+}
+.section-banner h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+}
+.section-banner p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.section-banner .banner-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.section-banner-new {
+  background: linear-gradient(135deg, #f0f7e6 0%, #e8f1d8 100%);
+  border-left: 4px solid var(--forest-dark);
+}
+.section-banner-new .banner-icon svg { color: var(--forest-dark); }
+.section-banner-new h2 { color: var(--forest-darkest); }
+.section-banner-new p  { color: var(--forest-dark); }
+.section-banner-empty {
+  background: var(--cream);
+  border-left: 4px solid var(--earth-tan);
+}
+.section-banner-empty .banner-icon svg { color: var(--earth-brown); }
+.section-banner-empty h2 { color: var(--ink); }
+.section-banner-empty p  { color: var(--slate); }

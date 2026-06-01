@@ -121,6 +121,95 @@ const Auth = {
   }
 };
 
+/* ---------- Reviews (localStorage-backed) ----------
+   Funnels review reads/writes through one helper. Until a real database is
+   added, user-submitted reviews are kept in localStorage and merged with the
+   baked-in reviews from trails.js. Swap THIS object to wire up a backend later.
+*/
+const REVIEWS_KEY       = 'tgo_user_reviews';   // user-submitted reviews
+const DELETED_BAKED_KEY = 'tgo_deleted_baked';  // ids of baked-in reviews admin deleted
+
+const Reviews = {
+  userReviews() {
+    try { return JSON.parse(localStorage.getItem(REVIEWS_KEY)) || []; }
+    catch (e) { return []; }
+  },
+  _saveUserReviews(arr) {
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(arr));
+  },
+  _deletedBakedIds() {
+    try { return JSON.parse(localStorage.getItem(DELETED_BAKED_KEY)) || []; }
+    catch (e) { return []; }
+  },
+  _saveDeletedBakedIds(arr) {
+    localStorage.setItem(DELETED_BAKED_KEY, JSON.stringify(arr));
+  },
+  forTrail(trailId) {
+    const id = Number(trailId);
+    const trail = (window.trailsData || []).find(t => t.id === id);
+    const deleted = this._deletedBakedIds();
+    const baked = (trail && trail.reviews ? trail.reviews : [])
+      .map(r => ({ ...r, _source: 'baked', _trailId: id }))
+      .filter(r => !deleted.includes(`${id}:${r.id}`));
+    const user = this.userReviews()
+      .filter(r => r.trailId === id)
+      .map(r => ({ ...r, _source: 'user', _trailId: id }));
+    user.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    baked.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    return [...user, ...baked];
+  },
+  all() {
+    const out = [];
+    const deleted = this._deletedBakedIds();
+    (window.trailsData || []).forEach(t => {
+      (t.reviews || []).forEach(r => {
+        if (deleted.includes(`${t.id}:${r.id}`)) return;
+        out.push({ ...r, _source: 'baked', _trailId: t.id, _trailName: t.name });
+      });
+    });
+    const trailById = new Map((window.trailsData || []).map(t => [t.id, t]));
+    this.userReviews().forEach(r => {
+      const t = trailById.get(r.trailId);
+      out.push({ ...r, _source: 'user', _trailId: r.trailId, _trailName: t ? t.name : '(unknown trail)' });
+    });
+    out.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    return out;
+  },
+  add({ trailId, username, rating, comment }) {
+    const all = this.userReviews();
+    const review = {
+      id: Date.now(),
+      trailId: Number(trailId),
+      username,
+      rating: Number(rating),
+      comment,
+      date: new Date().toISOString().split('T')[0],
+      helpfulCount: 0
+    };
+    all.push(review);
+    this._saveUserReviews(all);
+    return review;
+  },
+  remove(source, id, trailId) {
+    if (source === 'user') {
+      const all = this.userReviews();
+      const filtered = all.filter(r => r.id !== Number(id));
+      if (filtered.length === all.length) return false;
+      this._saveUserReviews(filtered);
+      return true;
+    }
+    if (source === 'baked') {
+      const key = `${trailId}:${id}`;
+      const deleted = this._deletedBakedIds();
+      if (deleted.includes(key)) return false;
+      deleted.push(key);
+      this._saveDeletedBakedIds(deleted);
+      return true;
+    }
+    return false;
+  }
+};
+
 /* ---------- Bad-language filter (replaces utils/badLanguageFilter.ts) ---------- */
 const BAD_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'sucks'];
 function containsBadLanguage(text) {
@@ -171,7 +260,6 @@ function renderHeader() {
              : ''}
          </span>
        </div>
- HEAD
        <button id="nav-logout" type="button">${sizeIcon('logout', 16)}<span>Logout</span></button>`
     : `<div class="nav-account-wrap">
          <button class="nav-account-btn" id="nav-account-btn" type="button" aria-haspopup="true" aria-expanded="false">
@@ -184,15 +272,6 @@ function renderHeader() {
        </div>`;
 
 
-       <button id="nav-logout" type="button">
-         ${sizeIcon('logout', 16)}
-         <span>Logout</span>
-       </button>`
-    : `<a href="login.html">
-         ${sizeIcon('user', 16)}
-         <span>Login</span>
-       </a>`;
- 553056e (Fix mobile navigation responsiveness and accessibility)
 
   return `
   <header class="site-header">
@@ -258,7 +337,7 @@ function mountChrome() {
         window.location.reload();
       });
     }
- HEAD
+
     // Account dropdown toggle (shown when logged out)
     const accountBtn = document.getElementById('nav-account-btn');
     const accountDropdown = document.getElementById('nav-account-dropdown');
@@ -285,7 +364,6 @@ function mountChrome() {
       });
     }
 
-    553056e (Fix mobile navigation responsiveness and accessibility)
     // Smooth-scroll for #discover when already on home
     const discover = document.getElementById('nav-discover');
 
