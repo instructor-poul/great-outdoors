@@ -21,6 +21,11 @@
   overflow: hidden;
 }
 
+
+.auth-wrapper .field-input {
+  padding: 11px 12px 11px 38px;
+}
+
 .tab-bar {
   display: flex;
   background: #fff;
