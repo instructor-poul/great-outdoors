@@ -11,6 +11,7 @@ a {
 }
 
 body {
+<<<<<<< HEAD
   background-color: #eee;
 }
 
@@ -26,6 +27,13 @@ header {
   padding: 10px;
   border-radius: 100px;
   z-index: 100;
+=======
+  background-color: rgb(231, 240, 229);
+}
+
+h1 {
+  color: rgb(8, 54, 8);
+>>>>>>> 48fb125ae79da102a046f03474f7c90f00885906
 }
 
 .brand {
