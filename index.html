@@ -1,35 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Welcome to the Great Outdoors!</title>
-<link rel="stylesheet" type="text/css" href="styles/toplevel.css">
-<script src="scripts/myscripts.js"></script>
-<script src="scripts/search.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to the Great Outdoors!</title>
+  <link rel="stylesheet" type="text/css" href="styles/toplevel.css">
+  <script src="scripts/myscripts.js" defer></script>
+  <script src="scripts/search.js" defer></script>
 </head>
 
 <body>
 
-<h1>Welcome to the Great Outdoors!</h1>
+  <h1>Welcome to the Great Outdoors!</h1>
 
-
-<img src = "images/outdoors.jpg" alt="Great Outdoors" onmouseover="showAlt(this)" onmouseout="hideAlt(this)">
-<figcaption>Your Adventure Awaits!</figcaption>
-
-<p id="alttext" style="font-size:50px"> <p>
-
-<ul>
-<div id="search-container">
-  <input
-    type="text"
-    id="search-input"
-    placeholder="Search by trail name or location..."
+  <img
+    class="hero-img"
+    src="images/outdoors.jpg"
+    alt="Great Outdoors"
+    onmouseover="showAlt(this)"
+    onmouseout="hideAlt(this)"
   >
-  <button id="clear-btn" onclick="clearSearch()">✕ Clear</button>
-</div>
+  <figcaption>Your Adventure Awaits!</figcaption>
 
-<div id="trail-results"></div>
-</ul>
+  <p id="alttext"></p>
+
+  <!-- Issue #18 — Live Search Results Display -->
+  <div id="search-container">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search by trail name or location..."
+      aria-label="Search trails"
+      autocomplete="off"
+    >
+    <button id="clear-btn" onclick="clearSearch()" aria-label="Clear search">✕ Clear</button>
+  </div>
+
+  <div id="trail-results" aria-live="polite"></div>
 
 </body>
 </html>

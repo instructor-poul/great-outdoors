@@ -1,60 +1,223 @@
+/* ── Global Reset & Base ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  background-color: linen;
+  background-color: #f0ede8;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #2c2c2c;
+  min-height: 100vh;
 }
 
+/* ── Header ──────────────────────────────────────────────── */
 h1 {
-  color: navy;
+  color: #1a3a2a;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  letter-spacing: 0.02em;
+  padding: 24px 20px 8px;
 }
 
-img{
-  width:300px;
-  height:200px;
-  border:10px solid green;
-  color:white;
-  border-radius:20px;
+/* ── Hero Image ──────────────────────────────────────────── */
+img.hero-img {
+  width: 100%;
+  max-width: 500px;
+  height: 220px;
+  object-fit: cover;
+  border: 6px solid #2d6a4f;
+  border-radius: 12px;
+  display: block;
+  margin: 12px 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+img.hero-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
 
-figcaption{
-  width: 315px;
-  text-align: left;
-  margin-left: 50px;
+figcaption {
+  margin: 4px 20px 16px;
+  font-style: italic;
+  color: #4a7c59;
+  font-size: 0.95rem;
 }
 
+#alttext {
+  font-size: 1.1rem;
+  color: #2d6a4f;
+  padding: 0 20px;
+  min-height: 1.4em;
+}
+
+/* ── Search Bar ──────────────────────────────────────────── */
 #search-container {
-  margin: 20px 0;
   display: flex;
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  padding: 16px 20px;
+  background: #fff;
+  border-top: 3px solid #2d6a4f;
+  border-bottom: 1px solid #d8d2c8;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 #search-input {
-  font-size: 16px;
-  padding: 10px 14px;
-  width: 300px;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 10px 16px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 440px;
   border: 2px solid #4a7c59;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: #fafaf8;
+  color: #1a3a2a;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+#search-input:focus {
+  border-color: #1a3a2a;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+#search-input::placeholder {
+  color: #9aab9e;
 }
 
 #clear-btn {
-  font-size: 14px;
-  padding: 10px 14px;
-  background: #4a7c59;
-  color: white;
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 10px 18px;
+  background: #2d6a4f;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+#clear-btn:hover  { background: #1a3a2a; }
+#clear-btn:active { transform: scale(0.97); }
+
+/* ── Results Count ───────────────────────────────────────── */
+.results-count {
+  padding: 12px 20px 4px;
+  font-size: 0.85rem;
+  color: #5a6b5e;
+  font-style: italic;
 }
 
+/* ── Trail Grid ──────────────────────────────────────────── */
+.trail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  padding: 8px 20px 32px;
+}
+
+/* ── Trail Card ──────────────────────────────────────────── */
 .trail-card {
-  background: #f5f5f5;
-  border-left: 4px solid #4a7c59;
-  border-radius: 6px;
-  padding: 14px 18px;
-  margin: 10px 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.trail-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
 }
 
-.trail-card h3 {
-  margin: 0 0 6px;
+.trail-card-img-wrap {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+.trail-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.trail-card:hover .trail-card-img {
+  transform: scale(1.05);
+}
+
+/* ── Difficulty Badge ────────────────────────────────────── */
+.difficulty-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+.badge-easy     { background: #d4edda; color: #155724; }
+.badge-moderate { background: #fff3cd; color: #856404; }
+.badge-hard     { background: #f8d7da; color: #721c24; }
+
+/* ── Card Body ───────────────────────────────────────────── */
+.trail-card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.trail-name {
+  font-size: 1.05rem;
+  color: #1a3a2a;
+  font-weight: bold;
+}
+.trail-location {
+  font-size: 0.85rem;
+  color: #5a6b5e;
+}
+.trail-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 6px;
+}
+.trail-stats span {
+  font-size: 0.8rem;
+  color: #3d5a44;
+  background: #f0f5f1;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* ── No Results ──────────────────────────────────────────── */
+.no-results {
+  text-align: center;
+  padding: 48px 20px;
+  color: #5a6b5e;
+}
+.no-results-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 12px;
+}
+.no-results p {
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  h1 { padding: 16px 14px 6px; font-size: 1.4rem; }
+  #search-container { padding: 12px 14px; }
+  .trail-grid { padding: 6px 14px 24px; gap: 14px; }
+  .results-count { padding: 10px 14px 2px; }
+  .trail-card-img-wrap { height: 140px; }
 }
