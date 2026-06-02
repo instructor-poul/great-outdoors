@@ -52,17 +52,17 @@
       </div>
     </div>
 
-    <button class="submit-btn" onclick="login()">
+    <button class="submit-btn" id="submit-btn" onclick="login()">
       <i class="ti ti-compass"></i>
       Return to trail
     </button>
 
-    <div class="divider">or</div>
+    <!-- <div class="divider">or</div>
 
     <button class="submit-btn submit-btn--secondary" type="button">
       <i class="ti ti-brand-google"></i>
       Continue with Google
-    </button>
+    </button> -->
 
     <div class="trail-stats">
       <div class="stat-item">
@@ -89,6 +89,20 @@
 </div>
 
 <script type="module" src="../Scripts/great_outdoors.js"></script>
+<script>
+  // Source - https://stackoverflow.com/a/155263
+// Posted by Steve Paulo, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-06-01, License - CC BY-SA 3.0
+
+document.getElementById("login-password")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) { // press enter to log in
+        document.getElementById("submit-btn").click();
+    }
+});
+
+</script>
 
 </body>
 </html>
