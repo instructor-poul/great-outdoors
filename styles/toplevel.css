@@ -63,6 +63,16 @@ header {
   background-color: #fff;
 }
 
+.safety-hero-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-height: 50vh;
+  background-color: #fff;
+}
+
 .hero-content {
   display: flex;
   flex-direction: column;
@@ -108,6 +118,7 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .overlay {
