@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="../Styles/great-outdoors.css">
+<link rel="stylesheet" href="../Styles/dash.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <div id="site-nav-container"></div>
+<div class="dashboard-wrapper">
+  <svg class="mountains" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,200 120,60 240,140 380,20 520,110 660,50 800,130 800,200" fill="#2D5016"/>
+    <polygon points="0,200 80,100 200,160 320,80 460,150 580,90 720,140 800,100 800,200" fill="#6B8F4E"/>
+  </svg>
+  <div class="dashboard-card">
+    <div class="card-stripe"></div>
+    <div class="dashboard-header">
+      <div class="trail-icon">
+        <i class="ti ti-mountain"></i>
+      </div>
+      <h1 id="greeting">Welcome back!</h1>
+      <p id="user-email" class="user-email-display">—</p>
+    </div>
+
+    <div class="user-identity-box">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div class="user-identity-info">
+        <span class="user-identity-name" id="user-display-name">Loading...</span>
+        <span class="user-identity-meta" id="user-identity-meta">PNW Hiker</span>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-section-label">Edit Profile</div>
+      <div class="profile-field-group">
+        <label class="profile-label" for="profile-username">
+          <i class="ti ti-user"></i> Username
+        </label>
+        <input type="text" id="profile-username" class="profile-input" placeholder="Trailblazer42">
+      </div>
+      <div class="profile-field-group">
+        <label class="profile-label" for="profile-bio">
+          <i class="ti ti-pencil"></i> Bio
+        </label>
+        <textarea id="profile-bio" class="profile-input" placeholder="Tell other hikers about yourself…" rows="3"></textarea>
+      </div>
+      <div class="profile-field-group">
+        <label class="profile-label" for="profile-avatar">
+          <i class="ti ti-photo"></i> Avatar URL
+        </label>
+        <input type="url" id="profile-avatar" class="profile-input" placeholder="https://…">
+      </div>
+      <div class="profile-field-group">
+        <label class="profile-label" for="profile-instagram">
+          <i class="ti ti-brand-instagram"></i> Instagram
+        </label>
+        <input type="url" id="profile-instagram" class="profile-input" placeholder="https://instagram.com/yourhandle">
+      </div>
+      <button class="submit-btn" style="width:100%; margin-top:0.25rem;" onclick="saveProfile()">
+        <i class="ti ti-device-floppy"></i> Save Profile
+      </button>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">
+      <i class="ti ti-logout"></i> Logout
+    </button>
+  </div>
+</div>
+<script type="module" src="../Scripts/great_outdoors.js"></script>
+</body>
+</html>

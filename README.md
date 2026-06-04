@@ -13,6 +13,10 @@ The Great Outdoors is a project dedicated to helping people explore the Pacific 
 - Popular trails are **overcrowded**, while lesser-known trails remain **underused**
 - Many existing websites are **outdated**, difficult to navigate, or overly focused on **gear advertising** rather than safety and stewardship
 
+tryin to make a change :/
+
+aagin
+
 ## 🌱 Mission
 
 Founded in **2024**, **The Great Outdoors** aims to:

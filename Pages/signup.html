@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../Styles/great-outdoors.css">
+  <link rel="stylesheet" href="../Styles/auth.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <title>Sign Up</title>
+</head>
+<body>
+  <div id="site-nav-container"></div>
+
+<div class="auth-wrapper">
+
+  <svg class="mountains" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,200 120,60 240,140 380,20 520,110 660,50 800,130 800,200" fill="#2D5016"/>
+    <polygon points="0,200 80,100 200,160 320,80 460,150 580,90 720,140 800,100 800,200" fill="#6B8F4E"/>
+  </svg>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+
+    <div class="card-header">
+      <div class="trail-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2D5016" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/>
+        </svg>
+      </div>
+      <div class="card-title">Start your adventure</div>
+      <div class="card-sub">Create your trail account</div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="signup-username">Username
+      </label>
+      <div class="field-wrap">
+        <i class="ti ti-user field-icon"></i>
+        <input class="field-input" id="signup-username" type="text" placeholder="PinecrestWanderer" />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="signup-email">Email</label>
+      <div class="field-wrap">
+        <i class="ti ti-mail field-icon"></i>
+        <input class="field-input" id="signup-email" type="email" placeholder="name@trail.com" />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="signup-password">Password</label>
+      <div class="field-wrap">
+        <i class="ti ti-lock field-icon"></i>
+        <input class="field-input" id="signup-password" type="password" placeholder="••••••••" />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Experience level</div>
+      <div class="difficulty-row">
+        <button type="button" class="diff-btn" onclick="selectDiff(this,'easy')">
+          <span class="diff-dot" style="background:#6B8F4E"></span>Easy
+        </button>
+        <button type="button" class="diff-btn" onclick="selectDiff(this,'mod')">
+          <span class="diff-dot" style="background:#C8933A"></span>Moderate
+        </button>
+        <button type="button" class="diff-btn" onclick="selectDiff(this,'hard')">
+          <span class="diff-dot" style="background:#A03030"></span>Hard
+        </button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Favorite terrain</div>
+      <div class="badge-row">
+        <span class="badge" onclick="toggleBadge(this)">🌲 Forest</span>
+        <span class="badge" onclick="toggleBadge(this)">⛰️ Alpine</span>
+        <span class="badge" onclick="toggleBadge(this)">🏜️ Desert</span>
+        <span class="badge" onclick="toggleBadge(this)">🌊 Coastal</span>
+        <span class="badge" onclick="toggleBadge(this)">🌿 Meadow</span>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="signUp()">
+      <i class="ti ti-map-pin"></i>
+      Blaze my trail
+    </button>
+
+    <p class="signin-link">
+      Already have an account? <a href="login.html">Sign in</a>
+    </p>
+
+  </div>
+</div>
+
+<script type="module" src="../Scripts/great_outdoors.js"></script>
+
+<script>
+  function selectDiff(el, level) {
+    document.querySelectorAll('.diff-btn').forEach(b => b.className = 'diff-btn');
+    el.classList.add('selected-' + level);
+  }
+
+  function toggleBadge(el) {
+    el.classList.toggle('sel');
+  }
+</script>
+
+</body>
+</html>

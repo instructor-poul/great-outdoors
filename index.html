@@ -1,30 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Welcome to the Great Outdoors!</title>
-<link rel="stylesheet" type="text/css" href="styles/toplevel.css">
-<script src="scripts/myscripts.js"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Great Outdoors — PNW Trail Guide</title>
+  <link rel="stylesheet" href="./Styles/great-outdoors.css">
+  <link rel="stylesheet" href="./Styles/home.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 </head>
-
 <body>
+  <div id="site-nav-container"></div>
 
-<h1>Welcome to the Great Outdoors!</h1>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-gradient"></div>
+    <svg class="hero-mountains" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,300 180,80 360,180 560,20 780,140 980,60 1200,160 1200,300" fill="#fff"/>
+      <polygon points="0,300 120,160 280,230 460,100 660,200 860,120 1060,190 1200,140 1200,300" fill="#6B8F4E"/>
+    </svg>
+    <div class="hero-stripe"></div>
 
+    <p class="hero-eyebrow">Pacific Northwest</p>
+    <h1 class="hero-title">Find your next <em>great</em> adventure</h1>
+    <p class="hero-sub">Community-built trail guides for PNW hikers. Real routes, real conditions, no fluff.</p>
+    <div class="hero-cta-row">
+      <a class="hero-btn hero-btn--primary" href="./Pages/trail.html">
+        <i class="ti ti-compass"></i> Explore a Trail
+      </a>
+      <a class="hero-btn hero-btn--ghost" href="./Pages/add-trail.html">
+        <i class="ti ti-plus"></i> Add a Trail
+      </a>
+    </div>
+  </section>
 
-<img src = "images/outdoors.jpg" alt="Great Outdoors" onmouseover="showAlt(this)" onmouseout="hideAlt(this)">
-<figcaption>Your Adventure Awaits!</figcaption>
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stats-bar-item">
+      <span class="stats-bar-val" id="stat-trail-count">—</span>
+      <span class="stats-bar-lbl">Trails</span>
+    </div>
+    <div class="stats-bar-item">
+      <span class="stats-bar-val" id="stat-total-miles">—</span>
+      <span class="stats-bar-lbl">Total Miles</span>
+    </div>
+    <div class="stats-bar-item">
+      <span class="stats-bar-val">PNW</span>
+      <span class="stats-bar-lbl">Region</span>
+    </div>
+    <div class="stats-bar-item">
+      <span class="stats-bar-val">Free</span>
+      <span class="stats-bar-lbl">Always</span>
+    </div>
+  </div>
 
-<p id="alttext" style="font-size:50px"> <p>
+  <!-- Trail cards -->
+  <div class="home-section">
+    <div class="section-header">
+      <h2 class="section-heading">Recently Added Trails</h2>
+      <a class="section-link" href="./Pages/trail.html">
+        Random trail <i class="ti ti-arrow-right"></i>
+      </a>
+    </div>
+    <div class="trail-grid" id="trail-grid">
+      <!-- Skeletons shown while loading -->
+      <div class="trail-card-skeleton">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line med"></div>
+        </div>
+      </div>
+      <div class="trail-card-skeleton">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line med"></div>
+        </div>
+      </div>
+      <div class="trail-card-skeleton">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line med"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<ul>
-<li><a href="mountain.html">Climb the Mountain</a></li>
-<li><a href="forest.html">Wander the Forest</a></li>
-<li><a href="falls.html">See the Falls</a></li>
-<li><a href="ferry.html">Ride the Ferry</a></li>
-<li><a href="lake.html">Walk Around the Lake</a></li>
-<li><a href="park.html">Read in the Park</a></li>
-</ul>
+  <!-- CTA banner -->
+  <div class="cta-banner">
+    <div class="cta-stripe"></div>
+    <svg class="cta-banner-mountains" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,200 120,60 240,140 380,20 520,110 660,50 800,130 800,200" fill="#fff"/>
+    </svg>
+    <div class="cta-banner-inner">
+      <h2>Know a trail we're missing?</h2>
+      <p>Help the community by adding your favourite routes. It takes two minutes and makes a real difference for fellow hikers.</p>
+      <a class="hero-btn hero-btn--primary" href="./Pages/add-trail.html">
+        <i class="ti ti-map-pin-plus"></i> Add a Trail
+      </a>
+    </div>
+  </div>
+
+  <footer class="home-footer">
+    &copy; 2026 Great Outdoors &mdash; Pacific Northwest Trail Guide
+  </footer>
+
+  <script type="module">
+    import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, orderBy, query, limit }
+                                   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig }      from "./Scripts/great_outdoors.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    const TYPE_LABELS = {
+      loop:           "Loop",
+      out_and_back:   "Out & Back",
+      point_to_point: "Point to Point",
+      lollipop:       "Lollipop",
+    };
+
+    const DIFF_CLASS = {
+      easy:     "diff-easy",
+      moderate: "diff-mod",
+      hard:     "diff-hard",
+    };
+
+    function trailCardHTML(id, t) {
+      const typeLbl = TYPE_LABELS[t.trail_type] ?? t.trail_type ?? "";
+      const diffCls = DIFF_CLASS[t.difficulty] ?? "";
+      const diffLbl = t.difficulty
+        ? t.difficulty.charAt(0).toUpperCase() + t.difficulty.slice(1)
+        : null;
+
+      const imageBlock = (t.images?.length)
+        ? `<img class="trail-card-image" src="${t.images[0]}" alt="${t.name}" loading="lazy">`
+        : `<div class="trail-card-image-placeholder"><i class="ti ti-mountain" aria-hidden="true"></i></div>`;
+
+      const diffBadge = diffLbl
+        ? `<span class="trail-card-diff ${diffCls}">${diffLbl}</span>`
+        : "";
+
+      const gainStat = t.elevation_gain
+        ? `<div class="trail-card-stat">
+             <span class="trail-card-stat-val">${t.elevation_gain.toLocaleString()} ft</span>
+             <span class="trail-card-stat-lbl">Elev. Gain</span>
+           </div>`
+        : "";
+
+      return `
+        <a class="trail-card" href="./Pages/trail.html?id=${id}">
+          ${imageBlock}
+          <div class="trail-card-body">
+            <span class="trail-card-type">${typeLbl}</span>
+            <span class="trail-card-name">${t.name}</span>
+            ${diffBadge}
+            <div class="trail-card-stats">
+              <div class="trail-card-stat">
+                <span class="trail-card-stat-val">${t.length_mi} mi</span>
+                <span class="trail-card-stat-lbl">Length</span>
+              </div>
+              ${gainStat}
+            </div>
+          </div>
+        </a>`;
+    }
+
+    async function loadTrails() {
+      const grid = document.getElementById("trail-grid");
+
+      try {
+        const q    = query(collection(db, "trails"), orderBy("created_at", "desc"), limit(6));
+        const snap = await getDocs(q);
+
+        // Populate stats
+        const allSnap   = await getDocs(collection(db, "trails"));
+        let totalMiles  = 0;
+        allSnap.forEach(d => { totalMiles += d.data().length_mi ?? 0; });
+
+        document.getElementById("stat-trail-count").textContent = allSnap.size;
+        document.getElementById("stat-total-miles").textContent =
+          totalMiles % 1 === 0 ? totalMiles : totalMiles.toFixed(1);
+
+        // Render cards
+        grid.innerHTML = "";
+        if (snap.empty) {
+          grid.innerHTML = `<p style="color:var(--trail-stone);font-size:14px;">No trails yet — be the first to add one!</p>`;
+          return;
+        }
+        snap.forEach(d => {
+          grid.insertAdjacentHTML("beforeend", trailCardHTML(d.id, d.data()));
+        });
+
+      } catch (err) {
+        grid.innerHTML = `<p style="color:var(--trail-stone);font-size:14px;">Couldn't load trails right now.</p>`;
+        console.error(err);
+      }
+    }
+
+    loadTrails();
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Trail</title>
+  <link rel="stylesheet" href="../Styles/great-outdoors.css">
+  <link rel="stylesheet" href="../Styles/add-trail.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="site-nav-container"></div>
+
+  <!-- ── Header ── -->
+  <div class="page-header">
+    <svg class="page-header-mountains" viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <polygon points="0,120 120,30 240,80 380,10 520,60 660,20 800,70 800,120" fill="#fff"/>
+    </svg>
+    <div class="page-header-inner">
+      <h1 id="page-title">Add Trail</h1>
+      <p>Fill in the details below. Fields marked <span style="color:var(--trail-gold)">*</span> are required.</p>
+    </div>
+  </div>
+
+  <!-- ── Form ── -->
+  <div class="form-wrapper">
+    <p id="status"></p>
+
+    <form id="trail-form">
+
+      <!-- Required fields -->
+      <div class="form-card">
+        <div class="form-card-header">Required Info</div>
+        <div class="form-card-body">
+
+          <div class="field full">
+            <label>Name <span class="req">*</span></label>
+            <input name="name" required>
+          </div>
+
+          <div class="field">
+            <label>Length (mi) <span class="req">*</span></label>
+            <input name="length_mi" type="number" step="any" required>
+          </div>
+
+          <div class="field">
+            <label>Elevation Gain (ft) <span class="req">*</span></label>
+            <input name="elevation_gain" type="number" required>
+          </div>
+
+          <div class="field full">
+            <label>Trail Type <span class="req">*</span></label>
+            <select name="trail_type" required>
+              <option value="">-- select --</option>
+              <option value="loop">Loop</option>
+              <option value="out_and_back">Out &amp; Back</option>
+              <option value="point_to_point">Point to Point</option>
+              <option value="lollipop">Lollipop</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Location <span class="req">*</span></label>
+
+            <div id="location-map" style="
+              width: 100%;
+              aspect-ratio: 1;
+              border-radius: 7px;
+              overflow: hidden;
+              border: 1.5px solid #E0DDD8;
+              margin-bottom: 0.5rem;
+              cursor: crosshair;
+            "></div>
+
+            <div style="display:flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+              <input type="number" id="location-lat" class="field-input" placeholder="Latitude" step="any" style="flex:1;">
+              <input type="number" id="location-lng" class="field-input" placeholder="Longitude" step="any" style="flex:1;">
+              <button type="button" class="submit-btn" id="location-confirm" style="white-space:nowrap;">
+                <i class="ti ti-check"></i> Confirm
+              </button>
+            </div>
+
+            <p id="location-label" style="
+              font-size: 11px;
+              color: var(--trail-stone);
+              letter-spacing: 0.04em;
+              min-height: 1.2em;
+            "></p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Optional fields -->
+      <div class="form-card">
+        <div class="form-card-header">Optional Info</div>
+        <div class="form-card-body">
+
+          <div class="field">
+            <label>Starting Elevation (ft)</label>
+            <input name="start_elev_ft" type="number">
+          </div>
+
+          <div class="field">
+            <label>Roughness (1–10)</label>
+            <input name="roughness" type="number" min="1" max="10">
+          </div>
+
+          <div class="field">
+            <label>Opening Time (e.g. 06:00)</label>
+            <input name="hours_open">
+          </div>
+
+          <div class="field">
+            <label>Closing Time (e.g. 20:00)</label>
+            <input name="hours_close">
+          </div>
+
+          <div class="field full">
+            <label>Hours Notes (e.g. Closed Dec–Mar)</label>
+            <input name="hours_notes">
+          </div>
+
+          <div class="field">
+            <label>Est. Time (hr)</label>
+            <input name="est_time_hr" type="number" step="any">
+          </div>
+
+          <div class="field">
+            <label>Associated Org</label>
+            <input name="associated_org">
+          </div>
+
+          <div class="field">
+            <label>Surfaces (comma separated)</label>
+            <input name="surfaces" placeholder="dirt, rocks, gravel">
+          </div>
+
+          <div class="field">
+            <label>Biomes (comma separated)</label>
+            <input name="biomes" placeholder="forest, river, alpine_meadow">
+          </div>
+
+          <div class="field full">
+            <label>Description (max 2000 chars)</label>
+            <textarea name="description" maxlength="2000" rows="4"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Image URLs (one per line)</label>
+            <textarea name="images" rows="4"></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button class="submit-btn" type="submit">
+          <i class="ti ti-device-floppy"></i>
+          <span id="submit-label">Add Trail</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDoc, setDoc, serverTimestamp, GeoPoint } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig, doc, auth, onAuthStateChanged } from "../Scripts/great_outdoors.js";
+
+    const db = getFirestore(initializeApp(firebaseConfig));
+    const status = document.getElementById("status");
+    const f = document.getElementById("trail-form");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = `login.html?redirect=add-trail.html`;
+      } else {
+
+        // Initialise location picker map
+        const locationMap = L.map("location-map", {
+          center: [47.5, -121.5], // Default to PNW
+          zoom: 7,
+          scrollWheelZoom: true,
+        });
+
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            attribution: "Tiles &copy; Esri",
+            maxZoom: 19,
+          }
+        ).addTo(locationMap);
+
+        setTimeout(() => locationMap.invalidateSize(), 100);
+
+        const pin = L.divIcon({
+          className: "",
+          html: `<div style="
+            width:14px; height:14px;
+            background:var(--trail-gold);
+            border:2.5px solid #fff;
+            border-radius:50%;
+            box-shadow:0 2px 6px rgba(0,0,0,0.4);
+          "></div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        });
+
+        let marker = null;
+
+        function placePin(lat, lng) {
+          if (marker) marker.setLatLng([lat, lng]);
+          else marker = L.marker([lat, lng], { icon: pin }).addTo(locationMap);
+          locationMap.setView([lat, lng], Math.max(locationMap.getZoom(), 12));
+        }
+
+        // Click map to set coordinates
+        locationMap.on("click", e => {
+          const { lat, lng } = e.latlng;
+          document.getElementById("location-lat").value = lat.toFixed(6);
+          document.getElementById("location-lng").value = lng.toFixed(6);
+          placePin(lat, lng);
+        });
+
+        // Confirm button — move pin to typed coords + reverse geocode
+        document.getElementById("location-confirm").addEventListener("click", () => {
+          const lat = parseFloat(document.getElementById("location-lat").value);
+          const lng = parseFloat(document.getElementById("location-lng").value);
+          const label = document.getElementById("location-label");
+
+          if (isNaN(lat) || isNaN(lng)) {
+            label.textContent = "Enter valid coordinates first.";
+            return;
+          }
+
+          placePin(lat, lng);
+          label.textContent = "Looking up location…";
+
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`, {
+            headers: {
+              "Accept-Language": "en",
+              "User-Agent": "GreatOutdoorsPNW/1.0",
+            }
+          })
+          .then(r => r.json())
+          .then(data => {
+            const a = data.address;
+            const place = [
+              a.natural || a.leisure || a.village || a.town || a.city || a.county || a.state_district,
+              a.state || a.province,
+              a.country,
+            ].filter(Boolean).join(", ");
+            label.textContent = place || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          })
+          .catch(() => {
+            label.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+          });
+        });
+        f.length_mi.addEventListener("change", () => {
+          f.length_mi.value = parseFloat(f.length_mi.value).toFixed(1);
+        });
+
+        f.est_time_hr.addEventListener("change", () => {
+          f.est_time_hr.value = parseFloat(f.est_time_hr.value).toFixed(1);
+        });
+
+
+        document.getElementById("trail-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          status.textContent = "Saving...";
+          const f = e.target;
+
+          const userSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+          const username = userSnap.exists() ? userSnap.data().username : auth.currentUser.email;
+
+          const trail = {};
+
+          // Required
+          trail.name           = f.name.value.trim();
+          trail.length_mi      = parseFloat(f.length_mi.value);
+          trail.elevation_gain = parseInt(f.elevation_gain.value);
+          trail.trail_type     = f.trail_type.value;
+          trail.location = new GeoPoint(
+            parseFloat(document.getElementById("location-lat").value),
+            parseFloat(document.getElementById("location-lng").value)
+          );
+
+          // Optional — only include if filled in
+          if (f.start_elev_ft.value)   trail.start_elev_ft  = parseInt(f.start_elev_ft.value);
+          if (f.roughness.value)       trail.roughness       = parseInt(f.roughness.value);
+          if (f.est_time_hr.value)     trail.est_time_hr     = parseFloat(f.est_time_hr.value);
+          if (f.description.value)     trail.description     = f.description.value.trim();
+          if (f.associated_org.value)  trail.associated_org  = f.associated_org.value.trim();
+
+          if (f.hours_open.value || f.hours_close.value || f.hours_notes.value) {
+            trail.opening_hours = {
+              open:  f.hours_open.value  || "",
+              close: f.hours_close.value || "",
+              notes: f.hours_notes.value || "",
+            };
+          }
+
+          trail.surfaces = f.surfaces.value ? f.surfaces.value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          trail.biomes   = f.biomes.value   ? f.biomes.value.split(",").map(s => s.trim()).filter(Boolean)   : [];
+          trail.images   = f.images.value   ? f.images.value.split("\n").map(s => s.trim()).filter(Boolean)  : [];
+
+          trail.created_at = serverTimestamp();
+          trail.updated_at = serverTimestamp();
+          trail.updated_by = auth.currentUser.email;
+          trail.updated_by_uid      = auth.currentUser.uid;
+          trail.updated_by_username = userSnap.data().username ?? auth.currentUser.email;
+
+          try {
+            const editId = new URLSearchParams(window.location.search).get("edit");
+            if (editId) {
+              delete trail.created_at;
+              await setDoc(doc(db, "trails", editId), { ...trail, updated_at: serverTimestamp() }, { merge: true });
+              status.textContent = "Trail updated!";
+              window.location.href = `trail.html?id=${editId}`;
+            } else {
+              const ref = await addDoc(collection(db, "trails"), trail);
+              status.textContent = "Trail added! ID: " + ref.id;
+              window.location.href = `trail.html?id=${ref.id}`;
+            }
+            e.target.reset();
+          } catch (err) {
+            status.textContent = "Error: " + err.message;
+          }
+        });
+
+        const editId = new URLSearchParams(window.location.search).get("edit");
+        if (editId) {
+          document.getElementById("page-title").textContent   = "Edit Trail";
+          document.getElementById("submit-label").textContent = "Save Changes";
+          const snap = await getDoc(doc(db, "trails", editId));
+          if (snap.exists()) {
+            const t = snap.data();
+            f.name.value           = t.name ?? "";
+            f.length_mi.value      = t.length_mi ?? "";
+            f.elevation_gain.value = t.elevation_gain ?? "";
+            f.trail_type.value     = t.trail_type ?? "";
+            document.getElementById("location-lat").value = t.location?.latitude ?? "";
+            document.getElementById("location-lng").value = t.location?.longitude ?? "";
+            f.start_elev_ft.value  = t.start_elev_ft ?? "";
+            f.roughness.value      = t.roughness ?? "";
+            f.hours_open.value     = t.opening_hours?.open ?? "";
+            f.hours_close.value    = t.opening_hours?.close ?? "";
+            f.hours_notes.value    = t.opening_hours?.notes ?? "";
+            f.est_time_hr.value    = t.est_time_hr ?? "";
+            f.description.value    = t.description ?? "";
+            f.associated_org.value = t.associated_org ?? "";
+            f.surfaces.value       = t.surfaces?.join(", ") ?? "";
+            f.biomes.value         = t.biomes?.join(", ") ?? "";
+            f.images.value         = t.images?.join("\n") ?? "";
+            const lat = t.location?.latitude;
+            const lng = t.location?.longitude;
+            if (lat && lng) {
+              if (marker) marker.setLatLng([lat, lng]);
+              else marker = L.marker([lat, lng], { icon: pin }).addTo(locationMap);
+              locationMap.setView([lat, lng], 14);
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

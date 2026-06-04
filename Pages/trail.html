@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trail</title>
+  <link rel="stylesheet" href="../Styles/great-outdoors.css">
+  <link rel="stylesheet" href="../Styles/trail.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="site-nav-container"></div>
+
+  <!-- ═══════════════════════════════════════════════
+       STATIC STRUCTURE
+       Add/remove/rearrange elements here to change
+       what the page shows and in what order.
+  ════════════════════════════════════════════════ -->
+
+  <div id="status" class="status-screen">
+    <div class="spinner"></div>
+    <span>Loading trail…</span>
+  </div>
+
+  <div id="content" style="display:none">
+
+    <!-- Header -->
+    <div class="trail-header">
+      <svg class="header-mountains" viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+        <polygon points="0,120 120,30 240,80 380,10 520,60 660,20 800,70 800,120" fill="#fff"/>
+      </svg>
+      <div class="trail-header-inner">
+        <a id="edit-trail-btn"><i class="ti ti-edit"></i> Edit Trail</a>
+        <div id="name"></div>
+        <p id="org"></p>
+      </div>
+    </div>
+
+    <!-- Stat strip -->
+    <div class="stat-strip">
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-length">—</span>
+        <span class="stat-strip-lbl">Miles</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-gain">—</span>
+        <span class="stat-strip-lbl">Elev. Gain</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-type">—</span>
+        <span class="stat-strip-lbl">Type</span>
+      </div>
+      <div class="stat-strip-item">
+        <span class="stat-strip-val" id="stat-time">—</span>
+        <span class="stat-strip-lbl">Est. Hours</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="trail-body">
+
+      <!-- Main column -->
+      <div class="trail-main">
+
+        <div id="images"></div>
+
+        <span class="section-label" id="desc-label" style="display:none">About this trail</span>
+        <p id="description"></p>
+
+        <div class="tag-section" id="surfaces-section" style="display:none">
+          <span class="section-label">Surfaces</span>
+          <div class="tag-row" id="surfaces"></div>
+        </div>
+
+        <div class="tag-section" id="biomes-section" style="display:none">
+          <span class="section-label">Biomes</span>
+          <div class="tag-row" id="biomes"></div>
+        </div>
+
+        <p id="last-edited"></p>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="trail-sidebar">
+        <div class="info-card">
+          <div class="info-card-header">Trail Details</div>
+          <div class="info-row" id="row-type" style="display:none">
+            <span class="info-row-label">Type</span>
+            <span class="info-row-value" id="type"></span>
+          </div>
+          <div class="info-row" id="row-start-elev" style="display:none">
+            <span class="info-row-label">Starting Elev.</span>
+            <span class="info-row-value" id="start-elev"></span>
+          </div>
+          <div class="info-row" id="row-roughness" style="display:none">
+            <span class="info-row-label">Roughness</span>
+            <span class="info-row-value"><div class="pip-row" id="roughness"></div></span>
+          </div>
+          <div class="info-row" id="row-hours" style="display:none">
+            <span class="info-row-label">Hours</span>
+            <span class="info-row-value" id="hours"></span>
+          </div>
+          <div class="info-row" id="row-location" style="display:none; flex-direction: column; align-items: stretch;">
+            <div id="trail-map" class="trail-map"></div>
+            <p id="location-label" style="
+              font-size: 11px;
+              color: var(--trail-stone);
+              text-align: center;
+              padding: 0.4rem 0 0;
+              letter-spacing: 0.04em;
+            "></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments (full width) -->
+      <div class="comments-section">
+        <h3>Comments</h3>
+        <div id="comments"></div>
+        <div id="comment-form" style="display:none">
+          <textarea id="comment-input" rows="3" maxlength="1000" placeholder="Write a comment…"></textarea>
+          <button id="comment-submit"><i class="ti ti-send"></i> Post</button>
+        </div>
+        <p id="comment-login">You must be <a href="login.html">logged in</a> to comment.</p>
+      </div>
+
+    </div><!-- /trail-body -->
+  </div><!-- /content -->
+
+
+  <script type="module">
+    import { initializeApp }                                          from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, getDocs, serverTimestamp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { query, where, orderBy, addDoc, updateDoc, deleteDoc,
+             collection, firebaseConfig, onAuthStateChanged, auth }  from "../Scripts/great_outdoors.js";
+
+    const db = getFirestore(initializeApp(firebaseConfig));
+
+
+    // ═══════════════════════════════════════════════
+    //  RENDER FUNCTIONS
+    //  Change how things look by editing these.
+    // ════════════════════════════════════════════════
+
+    function renderTrail(t, id) {
+      document.title = t.name;
+      document.getElementById("name").textContent = t.name;
+      document.getElementById("org").textContent  = t.associated_org ?? "";
+
+      // Stat strip
+      document.getElementById("stat-length").textContent = t.length_mi      ? t.length_mi + " mi"                      : "—";
+      document.getElementById("stat-gain").textContent   = t.elevation_gain ? t.elevation_gain.toLocaleString() + " ft" : "—";
+      document.getElementById("stat-type").textContent   = formatType(t.trail_type);
+      document.getElementById("stat-time").textContent   = t.est_time_hr    ? t.est_time_hr + " hr"                     : "—";
+
+      // Sidebar details
+      if (t.trail_type) {
+        document.getElementById("type").textContent      = formatType(t.trail_type);
+        document.getElementById("row-type").style.display = "";
+      }
+      if (t.start_elev_ft) {
+        document.getElementById("start-elev").textContent       = t.start_elev_ft.toLocaleString() + " ft";
+        document.getElementById("row-start-elev").style.display = "";
+      }
+      if (t.roughness) {
+        const bar = document.getElementById("roughness");
+        for (let i = 1; i <= 10; i++) {
+          const pip = document.createElement("div");
+          pip.className = "pip" + (i <= t.roughness ? " on" : "");
+          bar.appendChild(pip);
+        }
+        document.getElementById("row-roughness").style.display = "";
+      }
+      if (t.opening_hours) {
+        const h = t.opening_hours;
+        document.getElementById("hours").textContent      = (h.open && h.close ? h.open + "–" + h.close : "") + (h.notes ? " " + h.notes : "");
+        document.getElementById("row-hours").style.display = "";
+      }
+      if (t.location) {
+        const lat = t.location.latitude;
+        const lng = t.location.longitude;
+
+        document.getElementById("row-location").style.display = "flex";
+
+        // Wait for element to be visible before initialising Leaflet
+        requestAnimationFrame(() => {
+          const map = L.map("trail-map", {
+            center: [lat, lng],
+            zoom: 14,
+            zoomControl: true,
+            scrollWheelZoom: false,
+          });
+
+          L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+              attribution: "Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA",
+              maxZoom: 19,
+            }
+          ).addTo(map);
+
+          // Custom green pin to match brand
+          const pin = L.divIcon({
+            className: "",
+            html: `<div style="
+              width:14px;height:14px;
+              background:var(--trail-gold);
+              border:2.5px solid #fff;
+              border-radius:50%;
+              box-shadow:0 2px 6px rgba(0,0,0,0.4);
+            "></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+          });
+
+          L.marker([lat, lng], { icon: pin }).addTo(map);
+          setTimeout(() => map.invalidateSize(), 100);
+        });
+
+        // Reverse geocode - where are we by name?
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+          { headers: {
+            "Accept-Language": "en",
+            "User-Agent": "GreatOutdoorsPNWStudentProject/1.0"
+          } }
+        )
+        .then(r => r.json())
+        .then(data => {
+          const a = data.address;
+
+          // Build a readable location string from most to least specific
+          const place = [
+            a.natural | a.leisure || a.village || a.town || a.city || a.county || a.state_district,
+            a.state || a.province,
+            a.country,
+          ].filter(Boolean).join(", ");
+
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = place;
+        })
+        .catch(() => {
+          const bar = document.getElementById("location-label");
+          if (bar) bar.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        });
+      }
+
+      // Description
+      if (t.description) {
+        document.getElementById("description").textContent  = t.description;
+        document.getElementById("desc-label").style.display = "";
+      }
+
+      // Surfaces tags
+      if (t.surfaces?.length) {
+        const row = document.getElementById("surfaces");
+        t.surfaces.forEach(s => {
+          const span = document.createElement("span");
+          span.className   = "tag";
+          span.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+          row.appendChild(span);
+        });
+        document.getElementById("surfaces-section").style.display = "";
+      }
+
+      // Biomes tags
+      if (t.biomes?.length) {
+        const row = document.getElementById("biomes");
+        t.biomes.forEach(b => {
+          const span = document.createElement("span");
+          span.className   = "tag";
+          span.textContent = b.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+          row.appendChild(span);
+        });
+        document.getElementById("biomes-section").style.display = "";
+      }
+
+      // Images
+      const imagesDiv = document.getElementById("images");
+      (t.images ?? []).forEach(url => {
+        const img   = document.createElement("img");
+        img.src     = url;
+        img.alt     = t.name;
+        img.loading = "lazy";
+        imagesDiv.appendChild(img);
+      });
+
+      // Last edited
+      if (t.updated_by && t.updated_at) {
+        const date = t.updated_at.toDate().toLocaleDateString();
+        document.getElementById("last-edited").textContent =
+          `Last edited by ${t.updated_by_username ?? t.updated_by} on ${date}`;
+      }
+    }
+
+    function formatType(t) {
+      return { loop: "Loop", out_and_back: "Out & Back", point_to_point: "Point to Point", lollipop: "Lollipop" }[t] ?? t;
+    }
+
+    function renderEditButton(id, user) {
+      const btn = document.getElementById("edit-trail-btn");
+      btn.href  = user
+        ? `add-trail.html?edit=${id}`
+        : `login.html?redirect=trail.html?id=${id}`;
+    }
+
+    function renderComment(c, user, commentsDiv) {
+      const date = c.created_at?.toDate().toLocaleDateString() ?? "just now";
+
+      const div = document.createElement("div");
+      div.className = "comment-item";
+      div.id        = `comment-${c.id}`;
+
+      const meta       = document.createElement("div");
+      meta.className   = "comment-meta";
+      meta.textContent = `${c.username ?? c.email} · ${date}`;
+      if (c.edited) {
+        const badge       = document.createElement("span");
+        badge.className   = "comment-edited-badge";
+        badge.textContent = "edited";
+        meta.appendChild(badge);
+      }
+
+      const body       = document.createElement("div");
+      body.className   = "comment-body";
+      body.textContent = c.contents;
+
+      div.appendChild(meta);
+      div.appendChild(body);
+
+      if (user && user.uid === c.uid) {
+        const actions     = document.createElement("div");
+        actions.className = "comment-actions";
+
+        const deleteBtn       = document.createElement("button");
+        deleteBtn.className   = "comment-btn delete";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", async () => {
+          await deleteDoc(doc(db, "comments", c.id));
+          div.remove();
+        });
+
+        const editBtn       = document.createElement("button");
+        editBtn.className   = "comment-btn";
+        editBtn.textContent = "Edit";
+        editBtn.addEventListener("click", () => {
+          const input  = document.createElement("textarea");
+          input.className = "comment-edit-area";
+          input.value  = c.contents;
+          input.rows   = 3;
+          input.cols   = 40;
+
+          const saveBtn       = document.createElement("button");
+          saveBtn.className   = "comment-btn";
+          saveBtn.textContent = "Save";
+          saveBtn.addEventListener("click", async () => {
+            const newText = input.value.trim();
+            if (!newText) return;
+            await updateDoc(doc(db, "comments", c.id), { contents: newText, edited: true });
+            body.textContent = newText;
+            if (!meta.querySelector(".comment-edited-badge")) {
+              const badge       = document.createElement("span");
+              badge.className   = "comment-edited-badge";
+              badge.textContent = "edited";
+              meta.appendChild(badge);
+            }
+            actions.replaceChildren(deleteBtn, editBtn);
+            div.replaceChildren(meta, body, actions);
+          });
+
+          const cancelBtn       = document.createElement("button");
+          cancelBtn.className   = "comment-btn";
+          cancelBtn.textContent = "Cancel";
+          cancelBtn.addEventListener("click", () => {
+            actions.replaceChildren(deleteBtn, editBtn);
+            div.replaceChildren(meta, body, actions);
+          });
+
+          actions.replaceChildren(saveBtn, cancelBtn);
+          div.replaceChildren(meta, input, actions);
+        });
+
+        actions.appendChild(deleteBtn);
+        actions.appendChild(editBtn);
+        div.appendChild(actions);
+      }
+
+      commentsDiv.appendChild(div);
+    }
+
+    function renderCommentForm(user, db, trailId, commentsDiv, q) {
+      if (user) {
+        document.getElementById("comment-form").style.display  = "";
+        document.getElementById("comment-login").style.display = "none";
+
+        document.getElementById("comment-submit").addEventListener("click", async () => {
+          const contents = document.getElementById("comment-input").value.trim();
+          if (!contents) return;
+
+          const userSnap = await getDoc(doc(db, "users", user.uid));
+          const username = userSnap.exists() ? userSnap.data().username : user.email;
+
+          await addDoc(collection(db, "comments"), {
+            trail_id:   trailId,
+            uid:        user.uid,
+            email:      user.email,   // keep for backwards compat if you want
+            username:   username,     // add this
+            contents:   contents,
+            created_at: serverTimestamp(),
+          });
+
+          document.getElementById("comment-input").value = "";
+
+          // Re-fetch and re-render all comments
+          commentsDiv.innerHTML    = "";
+          const newSnap            = await getDocs(q);
+          newSnap.forEach(d => renderComment(d, user, commentsDiv));
+        });
+
+      } else {
+        document.getElementById("comment-form").style.display  = "none";
+        document.getElementById("comment-login").style.display = "";
+      }
+    }
+
+
+    // ═══════════════════════════════════════════════
+    //  DATA LOGIC
+    //  Fetching and wiring — avoid editing this
+    //  unless the data model changes.
+    // ════════════════════════════════════════════════
+
+    const id = new URLSearchParams(window.location.search).get("id");
+
+    // No ID — pick a random trail
+    if (!id) {
+      const snapshot = await getDocs(collection(db, "trails"));
+      const docs     = snapshot.docs;
+      if (!docs.length) {
+        document.getElementById("status").textContent = "No trails found.";
+      } else {
+        const random = docs[Math.floor(Math.random() * docs.length)];
+        window.location.href = `trail.html?id=${random.id}`;
+      }
+
+    } else {
+      const snap = await getDoc(doc(db, "trails", id));
+
+      if (!snap.exists()) {
+        document.getElementById("status").textContent = "Trail not found.";
+
+      } else {
+        document.getElementById("status").style.display  = "none";
+        document.getElementById("content").style.display = "";
+
+        renderTrail(snap.data(), id);
+
+        const commentsDiv = document.getElementById("comments");
+        const q = query(
+          collection(db, "comments"),
+          where("trail_id", "==", id),
+          orderBy("created_at", "asc")
+        );
+        const commentSnap = await getDocs(q);
+        const commentsWithUsers = commentSnap.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        }));
+
+        onAuthStateChanged(auth, (user) => {
+          renderEditButton(id, user);
+          renderCommentForm(user, db, id, commentsDiv, q);
+          commentsDiv.innerHTML = "";
+          commentsWithUsers.forEach(d => renderComment(d, user, commentsDiv));
+        });
+      }
+    }
+  </script>
+</body>
+</html>

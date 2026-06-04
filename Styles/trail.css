@@ -1,0 +1,309 @@
+
+/* ============================================
+   TRAIL DETAIL PAGE (trail.html)
+   ============================================ */
+
+.trail-header {
+  background: var(--trail-pine);
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.trail-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--trail-pine) 0%, var(--trail-sage) 50%, var(--trail-gold) 100%);
+}
+.header-mountains {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.trail-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+#edit-trail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+}
+#edit-trail-btn:hover { color: #fff; }
+
+#name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  line-height: 1.15;
+}
+#org {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--trail-gold);
+}
+
+.stat-strip {
+  background: #fff;
+  border-bottom: 1px solid #E8E5E0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.stat-strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-right: 1px solid #E8E5E0;
+  min-width: 130px;
+}
+.stat-strip-item:last-child { border-right: none; }
+.stat-strip-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: var(--trail-pine); }
+.stat-strip-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--trail-stone); margin-top: 2px; }
+
+.trail-body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.section-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--trail-gold);
+  margin-bottom: 0.5rem;
+}
+
+#description {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--trail-bark);
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.tag-section { margin-bottom: 1.25rem; }
+.tag-row     { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid #D0CCC6;
+  background: var(--trail-cream);
+  color: var(--trail-stone);
+}
+
+#images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+#images img {
+  width: 200px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+#last-edited {
+  font-size: 11px;
+  color: var(--trail-stone);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.info-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(59,42,26,0.1);
+}
+.info-card-header {
+  background: var(--trail-pine);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid #F0EDE8;
+  font-size: 13px;
+}
+.info-row:last-child  { border-bottom: none; }
+.info-row-label       { color: var(--trail-stone); font-weight: 400; }
+.info-row-value       { color: var(--trail-bark); font-weight: 700; text-align: right; max-width: 60%; }
+
+.pip-row { display: flex; gap: 3px; }
+.pip     { width: 14px; height: 5px; border-radius: 2px; background: #E8E5E0; }
+.pip.on  { background: var(--trail-gold); }
+
+.comments-section {
+  grid-column: 1 / -1;
+  border-top: 1px dashed #C8C4BE;
+  padding-top: 1.5rem;
+}
+.comments-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--trail-bark);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.comment-item {
+  background: #fff;
+  border: 1px solid #E0DDD8;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.6rem;
+  box-shadow: 0 1px 6px rgba(59,42,26,0.07);
+}
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--trail-stone);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.comment-edited-badge {
+  font-size: 9px;
+  background: var(--trail-cream);
+  color: var(--trail-stone);
+  border: 1px solid #D0CCC6;
+  border-radius: 10px;
+  padding: 1px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+.comment-body    { font-size: 14px; color: var(--trail-bark); font-weight: 300; line-height: 1.6; }
+.comment-actions { display: flex; gap: 8px; margin-top: 6px; }
+.comment-btn {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--trail-stone);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.comment-btn:hover        { color: var(--trail-pine); }
+.comment-btn.delete:hover { color: #A03030; }
+
+.comment-edit-area {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid #E0DDD8;
+  border-radius: 6px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--trail-bark);
+  background: var(--trail-cream);
+  resize: vertical;
+  outline: none;
+  margin-top: 6px;
+}
+.comment-edit-area:focus { border-color: var(--trail-pine); }
+
+#comment-form    { margin-top: 1rem; }
+#comment-input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #E0DDD8;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--trail-bark);
+  background: var(--trail-cream);
+  resize: vertical;
+  outline: none;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s;
+}
+#comment-input:focus { border-color: var(--trail-pine); background: #fff; }
+
+#comment-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--trail-pine);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#comment-submit:hover { background: #1e3a0d; }
+
+#comment-login { font-size: 13px; color: var(--trail-stone); margin-top: 0.75rem; }
+#comment-login a { color: var(--trail-pine); font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+@media (max-width: 680px) {
+  .trail-body          { grid-template-columns: 1fr; }
+  .stat-strip-item     { min-width: 80px; padding: 0.75rem 1rem; }
+  .comments-section    { grid-column: 1; }
+}
+
+.trail-map {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #E0DDD8;
+}
