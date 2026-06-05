@@ -4,8 +4,17 @@ let allTrails = [];          // stores all trails after fetch
 let activeFilter = 'all';    // tracks the current difficulty filter
 
 
-// ── FETCH & RENDER ──────────────────────────────────────────────────────────
 
+// ── CROWD SCORE ─────────────────────────────────────────────────────────────
+
+const popularityScore = { low: 2, medium: 5, high: 8 };
+const difficultyBonus = { easy: 1, moderate: 0, hard: -1 };
+
+function getCrowdScore(trail) {
+  return popularityScore[trail.popularity] + difficultyBonus[trail.difficulty];
+}
+
+// ── FETCH & RENDER ──────────────────────────────────────────────────────────
 // Load trails.json, save the data, then render all cards
 async function loadTrails() {
   try {
@@ -40,7 +49,7 @@ function renderCards(trails) {
 // Returns the HTML string for a single trail card
 function createCardHTML(trail) {
   const difficultyLabel = trail.difficulty.charAt(0).toUpperCase() + trail.difficulty.slice(1);
-
+  const crowdScore = getCrowdScore(trail);
   return `
     <a href="${trail.url}" class="guide-card" data-difficulty="${trail.difficulty}" aria-label="${trail.title} guide">
       <div class="card-img-wrap">
@@ -64,6 +73,8 @@ function createCardHTML(trail) {
           <span class="meta-sep">·</span>
           <span>${trail.est_time}</span>
           <span class="card-type-tag">${trail.type}</span>
+          <span class="meta-sep">·</span>
+          <span>👥 ${crowdScore}/10</span>  <!-- ← add this -->
         </div>
       </div>
     </a>
