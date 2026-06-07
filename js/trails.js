@@ -145,7 +145,7 @@ window.trailsData = [
   {
     id: 6,
     name: 'Rattlesnake Ledge',
-    image: 'images/trails/photo-1599606843763.jpg',
+    image: 'images/trails/rattlesnake-ledge-new.jpg',
     difficulty: 'Moderate',
     distance: 4.0,
     elevationGain: 1160,
@@ -281,7 +281,7 @@ window.trailsData = [
   {
     id: 11,
     name: 'Colchuck Lake',
-    image: 'images/trails/photo-1696219364293.jpg',
+    image: 'images/trails/photo-blanca-lake.jpg',
     difficulty: 'Hard',
     distance: 8.5,
     elevationGain: 2280,
@@ -310,7 +310,7 @@ window.trailsData = [
   {
     id: 12,
     name: 'Snow Lake',
-    image: 'images/trails/photo-1534991199945.jpg',
+    image: 'images/trails/snow-lake-new.jpg',
     difficulty: 'Moderate',
     distance: 6.0,
     elevationGain: 1300,
@@ -392,7 +392,7 @@ window.trailsData = [
   {
     id: 15,
     name: 'Mailbox Peak',
-    image: 'images/trails/photo-1696219364361.jpg',
+    image: 'images/trails/mailbox-peak-new.jpg',
     difficulty: 'Hard',
     distance: 9.4,
     elevationGain: 4100,
@@ -419,7 +419,7 @@ window.trailsData = [
   {
     id: 16,
     name: 'Gothic Basin',
-    image: 'images/trails/photo-1630626883157.jpg',
+    image: 'images/trails/gothic-basin-new.jpg',
     difficulty: 'Hard',
     distance: 9.0,
     elevationGain: 2600,
@@ -498,7 +498,7 @@ window.trailsData = [
   {
     id: 19,
     name: 'Chain Lakes Loop',
-    image: 'images/trails/photo-1593916845953.jpg',
+    image: 'images/trails/chain-lakes-loop-new.jpg',
     difficulty: 'Moderate',
     distance: 7.0,
     elevationGain: 1700,
