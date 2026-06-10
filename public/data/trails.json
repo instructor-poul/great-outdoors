@@ -10,6 +10,7 @@
     "est_time": "1.5–2 hr",
     "type": "Loop",
     "emoji": "🌊",
+    "image": "images/trails/carne_mountain/pic 1.png",
     "url": "https://www.youtube.com/"
   },
   {
@@ -23,6 +24,7 @@
     "est_time": "4–4.5 hr",
     "type": "Out & Back",
     "emoji": "🌲",
+    "image": "images/trails/margarets-way.jpg",
     "url": "#"
   },
   {
@@ -36,6 +38,7 @@
     "est_time": "1.5–2 hr",
     "type": "Loop",
     "emoji": "💧",
+    "image": "images/trails/coal-creek-falls.jpg",
     "url": "#"
   },
   {
@@ -49,6 +52,7 @@
     "est_time": "3–3.5 hr",
     "type": "Out & Back",
     "emoji": "🏔️",
+    "image": "images/trails/chirico-trail.jpg",
     "url": "#"
   },
   {
@@ -62,6 +66,7 @@
     "est_time": "2–2.5 hr",
     "type": "Out & Back",
     "emoji": "🦅",
+    "image": "images/trails/rattlesnake-ledge.jpg",
     "url": "#"
   },
   {
@@ -75,6 +80,7 @@
     "est_time": "4–5 hr",
     "type": "Out & Back",
     "emoji": "⛰️",
+    "image": "images/trails/mount-si.jpg",
     "url": "#"
   },
   {
@@ -88,6 +94,7 @@
     "est_time": "1–1.5 hr",
     "type": "Out & Back",
     "emoji": "🍃",
+    "image": "images/trails/franklin-falls.jpg",
     "url": "#"
   },
   {
@@ -101,6 +108,7 @@
     "est_time": "1.5–2 hr",
     "type": "Loop",
     "emoji": "🌿",
+    "image": "images/trails/twin-falls.jpg",
     "url": "#"
   }
 ]
