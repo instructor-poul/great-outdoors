@@ -67,8 +67,11 @@
 /* --- HERO SECTION --- */
 
 section {
-    background: linear-gradient(160deg, #025f58 0%, #038B80 60%, #04a899 100%);
-    height: 200px;
+    background: linear-gradient(135deg, #1e3a2f 0%, #3b6b4a 60%, #4a7a58 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,19 +79,28 @@ section {
     gap: 12px;
 }
 
+section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
 section h1 {
-    text-align: center;
-    padding: 0 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
     color: #f5f0e8;
-    font-size: 2.5rem;
+    position: relative;
     background: transparent;
     text-shadow: none;
-    font-family: Georgia, 'Times New Roman', serif;
+    padding: 0 20px;
 }
 
 section p {
-    color: rgba(245, 240, 232, 0.75);
-    font-size: 1.05rem;
+    color: #b0c8b5;
+    font-size: 1rem;
+    position: relative;
     text-align: center;
     padding: 0 20px;
 }
