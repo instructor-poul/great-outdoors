@@ -53,7 +53,8 @@ function createCardHTML(trail) {
   return `
     <a href="${trail.url}" class="guide-card" data-difficulty="${trail.difficulty}" aria-label="${trail.title} guide">
       <div class="card-img-wrap">
-        <div class="img-placeholder">${trail.emoji}</div>
+        <img src="${trail.image}" alt="${trail.title}" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.img-placeholder').style.display='flex'">
+        <div class="img-placeholder" style="display:none">${trail.emoji}</div>
         <span class="card-badge">
           <span class="badge-dot ${trail.difficulty}"></span>${difficultyLabel}
         </span>
