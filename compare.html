@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trail Comparison | Great Outdoors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles/compare.css" />
+</head>
+<body>
+
+  <!-- ── Page Header ───────────────────────────────────── -->
+  <header class="cmp-header">
+    <a href="index.html" class="cmp-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      All Trails
+    </a>
+    <div class="cmp-header-text">
+      <p class="cmp-header-eyebrow">Pacific Northwest</p>
+      <h1 class="cmp-title">Trail Comparison</h1>
+      <p class="cmp-subtitle">Select two trails to compare them side-by-side</p>
+    </div>
+  </header>
+
+  <main class="cmp-main">
+
+    <!-- ── Trail Selectors ────────────────────────────── -->
+    <section class="cmp-selectors" aria-label="Trail selection">
+
+      <!-- Trail A -->
+      <div class="cmp-selector-card" id="selector-a">
+        <p class="cmp-selector-eyebrow">Trail A</p>
+        <label for="trail-a" class="cmp-selector-label">Choose a trail</label>
+        <div class="cmp-select-wrap">
+          <svg class="cmp-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <select id="trail-a" class="cmp-select" aria-label="Select first trail">
+            <option value="">-- Choose a trail --</option>
+          </select>
+        </div>
+        <!-- Mini preview populated by JS -->
+        <div class="trail-preview" id="preview-a" aria-live="polite"></div>
+      </div>
+
+      <!-- Swap button -->
+      <div class="cmp-vs-col">
+        <div class="cmp-vs" aria-hidden="true">VS</div>
+        <button class="cmp-swap-btn" id="swap-btn" title="Swap trails" aria-label="Swap selected trails">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/>
+          </svg>
+          Swap
+        </button>
+      </div>
+
+      <!-- Trail B -->
+      <div class="cmp-selector-card" id="selector-b">
+        <p class="cmp-selector-eyebrow">Trail B</p>
+        <label for="trail-b" class="cmp-selector-label">Choose a trail</label>
+        <div class="cmp-select-wrap">
+          <svg class="cmp-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <select id="trail-b" class="cmp-select" aria-label="Select second trail">
+            <option value="">-- Choose a trail --</option>
+          </select>
+        </div>
+        <div class="trail-preview" id="preview-b" aria-live="polite"></div>
+      </div>
+
+    </section>
+
+    <!-- ── Comparison Results ─────────────────────────── -->
+    <section class="cmp-results" id="comparison-section" aria-live="polite">
+
+      <!-- Placeholder state -->
+      <div class="cmp-placeholder" id="cmp-placeholder">
+        <span class="cmp-placeholder-icon">🥾</span>
+        <p class="cmp-placeholder-title">Ready to compare?</p>
+        <p class="cmp-placeholder-hint">Pick two trails above to see how they stack up.</p>
+      </div>
+
+      <!-- Same-trail warning -->
+      <div class="cmp-same-warning" id="cmp-same-warning" hidden>
+        <span>⚠️</span>
+        <p>You've selected the same trail twice. Pick two different trails to compare.</p>
+      </div>
+
+      <!-- Winner banner (populated by JS) -->
+      <div class="cmp-winner-banner" id="cmp-winner-banner" hidden></div>
+
+      <!-- Metric cards grid -->
+      <div class="cmp-cards-grid" id="cmp-cards-grid" hidden></div>
+
+      <!-- Full data table (accessible fallback) -->
+      <div class="cmp-table-wrap" id="cmp-table-wrap" hidden>
+        <table class="cmp-table" aria-label="Trail comparison table">
+          <thead>
+            <tr>
+              <th class="cmp-th-metric" scope="col">Metric</th>
+              <th class="cmp-th-trail cmp-th-a" id="th-trail-a" scope="col">Trail A</th>
+              <th class="cmp-th-trail cmp-th-b" id="th-trail-b" scope="col">Trail B</th>
+            </tr>
+          </thead>
+          <tbody id="cmp-tbody"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="cmp-footer">
+    <a href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Great Outdoors
+    </a>
+  </footer>
+
+  <script src="scripts/compare.js"></script>
+</body>
+</html>

@@ -1,30 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Welcome to the Great Outdoors!</title>
-<link rel="stylesheet" type="text/css" href="styles/toplevel.css">
-<script src="scripts/myscripts.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Great Outdoors – Pacific Northwest Trails</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:wght@300;400&family=DM+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles/toplevel.css">
+  <script src="scripts/myscripts.js" defer></script>
+  <script src="scripts/search.js" defer></script>
 </head>
 
 <body>
 
-<h1>Welcome to the Great Outdoors!</h1>
+  <!-- ── Header ───────────────────────────────────────── -->
+  <header class="page-header">
+    <div>
+      <p class="header-tagline">Pacific Northwest</p>
+      <h1>Welcome to the Great Outdoors!</h1>
+    </div>
+  </header>
 
+  <!-- ── Hero Image ───────────────────────────────────── -->
+  <div class="hero-wrap">
+    <figure>
+      <img
+        class="hero-img"
+        src="images/outdoors.jpg"
+        alt="Great Outdoors — Pacific Northwest scenery"
+        onmouseover="showAlt(this)"
+        onmouseout="hideAlt(this)"
+      >
+      <figcaption>Your Adventure Awaits</figcaption>
+      <p id="alttext" aria-live="polite"></p>
+    </figure>
+  </div>
 
-<img src = "images/outdoors.jpg" alt="Great Outdoors" onmouseover="showAlt(this)" onmouseout="hideAlt(this)">
-<figcaption>Your Adventure Awaits!</figcaption>
+  <!-- ── Sticky Search + Filters (Issue #35) ──────────── -->
+  <div id="search-container" role="search">
 
-<p id="alttext" style="font-size:50px"> <p>
+    <div class="search-row">
+      <!-- Search input -->
+      <div class="search-input-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search by trail name, location…"
+          aria-label="Search trails"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <span id="result-count-badge" class="search-count-badge" aria-hidden="true"></span>
+      </div>
 
-<ul>
-<li><a href="mountain.html">Climb the Mountain</a></li>
-<li><a href="forest.html">Wander the Forest</a></li>
-<li><a href="falls.html">See the Falls</a></li>
-<li><a href="ferry.html">Ride the Ferry</a></li>
-<li><a href="lake.html">Walk Around the Lake</a></li>
-<li><a href="park.html">Read in the Park</a></li>
-</ul>
+      <!-- Clear button -->
+      <button id="clear-btn" onclick="clearSearch()" aria-label="Clear search and filters">
+        ✕ Clear
+      </button>
+    </div>
+
+    <!-- Difficulty filter + Sort controls -->
+    <div class="controls-row">
+      <div class="diff-filter" role="group" aria-label="Filter by difficulty">
+        <span class="diff-label">Difficulty:</span>
+        <button class="diff-btn active" data-diff="All"      aria-pressed="true">All</button>
+        <button class="diff-btn"        data-diff="Easy"     aria-pressed="false">🟢 Easy</button>
+        <button class="diff-btn"        data-diff="Moderate" aria-pressed="false">🟡 Moderate</button>
+        <button class="diff-btn"        data-diff="Hard"     aria-pressed="false">🔴 Hard</button>
+      </div>
+
+      <div class="sort-wrap">
+        <label class="sort-label" for="sort-select">Sort:</label>
+        <select id="sort-select" aria-label="Sort trails">
+          <option value="default">Default</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="distance-asc">Shortest first</option>
+          <option value="distance-desc">Longest first</option>
+          <option value="elevation-asc">Lowest gain</option>
+          <option value="elevation-desc">Highest gain</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Trail Results (Issue #18 + #35) ──────────────── -->
+  <main>
+    <div id="trail-results" aria-live="polite" aria-label="Trail search results"></div>
+  </main>
 
 </body>
 </html>
