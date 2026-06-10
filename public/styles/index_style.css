@@ -1,0 +1,440 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#wrapper {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f0e8;
+}
+
+/* Background image removed — clean cream base matches guides page */
+#wrapper::before {
+    content: none;
+}
+
+/* --- NAVIGATION BAR (FLEXBOX) --- */
+
+#main-nav {
+    background: #D4912B;
+    padding: 10px 40px;
+}
+
+#main-nav ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+    width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    gap: 50px;
+}
+
+#main-nav li {
+    text-align: center;
+}
+
+#main-nav .nav-links li {
+    background: rgba(255, 255, 255, 0.2);
+    width: auto;
+    line-height: 40px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+#main-nav li a {
+    text-decoration: none;
+    color: #ffffff;
+    display: block;
+    padding: 5px 18px;
+}
+
+#main-nav li a:hover {
+    background: rgba(255, 255, 255, 0.85);
+    color: #7a4d1a;
+    border-radius: 6px;
+}
+
+/* --- HERO SECTION --- */
+
+section {
+    background: linear-gradient(135deg, #1e3a2f 0%, #3b6b4a 60%, #4a7a58 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+}
+
+section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+section h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: #f5f0e8;
+    position: relative;
+    background: transparent;
+    text-shadow: none;
+    padding: 0 20px;
+}
+
+section p {
+    color: #b0c8b5;
+    font-size: 1rem;
+    position: relative;
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* --- ROWS (FLEXBOX) --- */
+
+.row {
+    background: #f5f0e8;
+    padding: 40px;
+    margin: 20px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.inside-row {
+    background: #ffffff;
+    width: 410px;
+    min-height: 320px;
+    color: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.inside-row h3 {
+    margin: 20px;
+    color: #1a2e1a;
+}
+
+.inside-row img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.inside-row:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    z-index: 1;
+}
+
+.inside-row h2 {
+    text-align: center;
+    margin-top: 10px;
+    color: #1a2e1a;
+    font-size: 1.1rem;
+}
+
+.inside-row p {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 0.85em;
+    margin: 10px;
+    line-height: 1.4;
+    color: #555555;
+}
+
+/* --- TRAIL CARDS (homepage featured trails) --- */
+
+.trail-emoji-wrap {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #c8dcca 0%, #a8c0aa 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+.trail-badge {
+    display: inline-block;
+    margin: 10px 10px 4px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.trail-badge.easy     { background: #e8f5ec; color: #4caf72; }
+.trail-badge.moderate { background: #fef3e2; color: #e8a838; }
+.trail-badge.hard     { background: #fdecea; color: #d9513a; }
+
+.trail-location {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 4px 10px;
+}
+
+.trail-meta {
+    font-size: 0.78rem;
+    color: #aaa;
+    margin: 4px 10px 12px;
+}
+
+/* --- FOOTER --- */
+
+footer {
+    background: #1a2e1a;
+    margin-top: auto;
+    padding: 20px 40px;
+    border-top: 2px solid #2d5a27;
+}
+
+footer ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+footer li {
+    color: #b8ccb0;
+    font-size: 0.9rem;
+}
+
+.footer-socials a {
+    text-decoration: none;
+    color: #b8ccb0;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.footer-socials a:hover {
+    color: #ffffff;
+}
+
+/* ================================================
+   STYLES BELOW ARE FOR OTHER PAGES — UNCHANGED
+   ================================================ */
+
+/* --- DESCRIPTION / IMAGE DETAIL PAGE --- */
+
+.row1 {
+    background: #687314;
+    padding: 50px;
+    margin: 30px;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; 
+}
+
+.inside1-row {
+    float: left;
+    color: #6BA641;
+    margin: 10px;
+}
+
+.inside1-row img {
+    height: 500px;
+    width: 800px;
+    margin-left: 30px;
+    float: right;
+    border-radius: 15px;
+}
+
+.inside1-row figcaption {
+    float: right;
+    color: #fff;
+}
+
+.inside1-row h2 {
+    margin-left: 10px;
+    padding: 8px;
+    color: #fff;
+    background: #038B80;
+    width: 150px;
+    text-align: center;
+}
+
+.inside1-row p {
+    line-height: 1.7em;
+    margin-bottom: 10px;
+    padding: 8px;
+    color: #fff;
+}
+
+/*--- CSS OF LOGIN ---*/
+
+.row2 {
+    background: #687314;
+    padding: 50px;
+    margin: 30px;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; 
+}
+
+.inside-row2 {
+    float: left;
+    margin: 10px;
+}
+
+form {
+    margin: 10px;
+    width: 500px;
+    border-radius: 15%;
+    background: #6BA641;
+    padding: 10px;
+}
+
+form img {
+    height: 128px;
+    width: 128px;
+    margin-left: 165px;
+}
+
+label {
+    display: block;
+    margin-bottom: 20px;
+    font-weight: bold;
+    padding: 20px;
+}
+
+label[for="uname"] {
+    margin-top: 10px;
+}
+
+label[for="pass"] {
+    margin-top: 10px;
+}
+
+label[for="rmbr"] {
+    text-align: center;
+}
+
+input {
+    margin-bottom: 20px;
+    height: 50px;
+    width: 100%;
+    border-radius: 10px;
+    background: #038B80;
+    color: #fff;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin: 10px;
+}
+
+input[type="button"] {
+    width: 50%;
+    margin-left: 110px;
+    background: #D9965B;
+    color: #000;
+}
+
+input[type="button"]:hover {
+    background: #fff;
+    color: #000;
+}
+
+span {
+    text-align: center;
+    display: block;
+    margin-bottom: 5px;
+}
+
+span a {
+    margin-left: 5px;
+}
+
+/*--- CSS OF TRAILS ---*/
+
+article { 
+    background: #038B80;
+    height: 120px;
+    padding: 30px 20px;
+}
+
+article h3 {  
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px #D9965B;
+    margin-left: 30px;
+}
+
+article p {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px #D9965B;
+    margin-left: 30px;
+}
+
+/*--- CSS OF SAFETY ---*/
+
+.row3 {
+    min-height: 800px;
+    display: flex;
+    justify-content: flex-start; 
+    margin: 30px;
+    flex-wrap: wrap; 
+}
+
+.inside-row3 {
+    height: 800px;
+    width: 1000px;
+    background: #038B80;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.six-safety {
+    height: 300px;
+    width: 300px;
+    background: #D9965B;
+}
+
+.row4 {
+    min-height: 400px;
+    display: flex;
+    justify-content: flex-end; 
+    flex-wrap: wrap;
+    margin-left: 50px;
+}
+
+.inside-row4 {
+    height: 800px;
+    width: 400px;
+    background: #687314;
+}
