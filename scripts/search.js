@@ -156,8 +156,10 @@ function renderTrails(trails, query = '') {
     const diff   = difficultyInfo(trail.difficulty);
     const imgSrc = trail.photo_url || 'images/outdoors.jpg';
 
-    const card = document.createElement('div');
+    const card = document.createElement('a');
     card.className = 'trail-card';
+    card.href = `trail.html?trail=${encodeURIComponent(trail.name)}`;
+    card.setAttribute('aria-label', `View details for ${trail.name}`);
     card.innerHTML = `
       <div class="trail-card-img-wrap">
         <img

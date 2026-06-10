@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trail Detail — Great Outdoors</title>
+
+  <!-- Fonts (matches index.html) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:wght@300;400&family=DM+Sans:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="styles/trail-detail.css">
+</head>
+<body>
+
+<div class="trail-detail-page">
+
+  <!-- ── Breadcrumb Nav ──────────────────────────────────────────────── -->
+  <nav class="trail-nav" aria-label="Breadcrumb">
+    <a href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      All Trails
+    </a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span class="current-trail" id="trail-name-breadcrumb">Loading…</span>
+  </nav>
+
+  <!-- ── Hero Image ─────────────────────────────────────────────────── -->
+  <section class="hero-section" aria-label="Trail hero image">
+    <img id="trail-hero-img" src="" alt="" loading="eager">
+    <div class="hero-overlay" id="hero-overlay">
+      <div class="trail-header">
+        <span class="difficulty-badge" id="difficulty-badge"></span>
+        <h1 id="trail-name">Loading trail…</h1>
+        <p id="trail-location"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats Strip ────────────────────────────────────────────────── -->
+  <div class="stats-strip" role="region" aria-label="Trail statistics">
+    <div id="detail-stats"></div>
+  </div>
+
+  <!-- ── Detail Content ────────────────────────────────────────────── -->
+  <main class="detail-content">
+
+    <!-- About -->
+    <section class="about-section" aria-labelledby="about-heading">
+      <p class="section-eyebrow" id="about-heading">About this trail</p>
+      <p id="trail-description"></p>
+    </section>
+
+    <!-- Difficulty tip callout -->
+    <aside class="difficulty-callout" aria-label="Difficulty advice">
+      <span class="callout-icon" aria-hidden="true">🧭</span>
+      <div class="callout-body">
+        <p class="callout-title">Hiker's tip</p>
+        <p id="difficulty-tip"></p>
+      </div>
+    </aside>
+
+    <!-- Back link -->
+    <a href="index.html" class="back-cta" aria-label="Back to all trails">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Browse all trails
+    </a>
+
+  </main>
+
+</div><!-- /.trail-detail-page -->
+
+<script src="scripts/trail-detail.js"></script>
+<script>
+  // Keep breadcrumb in sync once JS resolves the name
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+      const name = document.getElementById('trail-name').textContent;
+      if (name && name !== 'Loading trail…') {
+        document.getElementById('trail-name-breadcrumb').textContent = name;
+      }
+    });
+    observer.observe(document.getElementById('trail-name'), { childList: true, characterData: true, subtree: true });
+  });
+</script>
+</body>
+</html>

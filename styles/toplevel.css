@@ -315,6 +315,13 @@ figcaption {
 }
 
 /* ── Trail Card ──────────────────────────────────────────────────────────── */
+/* Trail cards are now <a> elements — reset link styling */
+a.trail-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
 .trail-card {
   background: #fff;
   border-radius: var(--radius-md);
