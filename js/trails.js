@@ -6,7 +6,7 @@ window.trailsData = [
   {
     id: 1,
     name: 'Opal Creek Trail',
-    image: 'images/trails/photo-1600929622034.jpg',
+    image: 'images/trails/opal-creek-new.jpg',
     difficulty: 'Easy',
     distance: 7.0,
     elevationGain: 500,
@@ -471,7 +471,7 @@ window.trailsData = [
   {
     id: 18,
     name: 'Granite Mountain',
-    image: 'images/trails/photo-1600929622034.jpg',
+    image: 'images/trails/granite-mountain-new.jpg',
     difficulty: 'Hard',
     distance: 8.6,
     elevationGain: 3800,
