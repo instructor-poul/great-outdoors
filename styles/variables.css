@@ -1,0 +1,430 @@
+/* ==========================================================================
+   Great Outdoors — CSS Custom Properties
+   Style Guide Variables File
+   Issue #26 | Estimated: 2hr
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   COLOR PALETTE — Nature-Inspired
+   -------------------------------------------------------------------------- */
+:root {
+  /* Primary — Forest Green */
+  --color-primary:          #2D6A4F; /* Deep forest canopy */
+  --color-primary-light:    #52B788; /* Fresh fern */
+  --color-primary-dark:     #1B4332; /* Old growth bark */
+  --color-primary-subtle:   #D8F3DC; /* Morning mist on leaves */
+
+  /* Secondary — Trail Earth */
+  --color-secondary:        #A0522D; /* Packed dirt trail */
+  --color-secondary-light:  #D4845A; /* Sandstone sun */
+  --color-secondary-dark:   #6B3520; /* Redwood shadow */
+  --color-secondary-subtle: #F5E6DC; /* Desert dust */
+
+  /* Accent — Sky & Water */
+  --color-accent:           #2196A6; /* Mountain lake */
+  --color-accent-light:     #63BCC9; /* Clear sky reflection */
+  --color-accent-dark:      #0E6B7A; /* Deep river pool */
+  --color-accent-subtle:    #D6EFF2; /* Morning sky haze */
+
+  /* Neutral — Stone & Bark */
+  --color-neutral-900:      #1C1C1C; /* Night trail */
+  --color-neutral-800:      #2E2E2E; /* Dark granite */
+  --color-neutral-700:      #4A4A4A; /* Weathered slate */
+  --color-neutral-600:      #6B6B6B; /* River stone */
+  --color-neutral-500:      #8C8C8C; /* Driftwood */
+  --color-neutral-400:      #B0B0B0; /* Dry grass */
+  --color-neutral-300:      #CECECE; /* Limestone */
+  --color-neutral-200:      #E5E5E5; /* Light gravel */
+  --color-neutral-100:      #F4F4F2; /* Birch paper */
+  --color-neutral-50:       #FAFAF8; /* Snow on summit */
+
+  /* Semantic — Feedback Colors */
+  --color-success:          #2D6A4F; /* Same as primary — success = nature */
+  --color-success-light:    #D8F3DC;
+  --color-warning:          #E9A428; /* Autumn maple */
+  --color-warning-light:    #FEF3D0;
+  --color-error:            #C0392B; /* Danger blaze */
+  --color-error-light:      #FDECEA;
+  --color-info:             #2196A6; /* Same as accent */
+  --color-info-light:       #D6EFF2;
+
+  /* Difficulty Indicators */
+  --color-difficulty-easy:     #52B788; /* Easy = green meadow */
+  --color-difficulty-moderate: var(--color-warning);
+  --color-difficulty-hard:     #C0392B; /* Hard = red alert */
+
+  /* Surface & Background */
+  --color-bg:               #FAFAF8; /* Off-white — aged paper */
+  --color-bg-raised:        #FFFFFF; /* Card surfaces */
+  --color-bg-sunken:        #F0EFE9; /* Input fields, inset areas */
+  --color-bg-overlay:       rgba(28, 28, 28, 0.55); /* Modal backdrops */
+
+  /* Border */
+  --color-border:           #CECECE; /* Default border */
+  --color-border-strong:    #8C8C8C; /* Emphasized border */
+  --color-border-subtle:    #E5E5E5; /* Hairline dividers */
+
+  /* Text */
+  --color-text-primary:     #1C1C1C; /* Main body copy */
+  --color-text-secondary:   #4A4A4A; /* Supporting text */
+  --color-text-muted:       #8C8C8C; /* Placeholder, captions */
+  --color-text-inverse:     #FAFAF8; /* Text on dark backgrounds */
+  --color-text-link:        #2D6A4F; /* Hyperlinks */
+  --color-text-link-hover:  #1B4332;
+
+
+/* --------------------------------------------------------------------------
+   TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+
+  /* Font Families */
+  --font-display:  'Playfair Display', Georgia, serif;   /* Headings — editorial, outdoorsy gravitas */
+  --font-body:     'Source Sans 3', 'Helvetica Neue', sans-serif; /* Body — clean, mobile-readable */
+  --font-mono:     'JetBrains Mono', 'Courier New', monospace; /* Code, data, distances */
+
+  /* Font Sizes — fluid scale, mobile-first */
+  --text-xs:    0.75rem;   /*  12px — captions, labels */
+  --text-sm:    0.875rem;  /*  14px — secondary info */
+  --text-base:  1rem;      /*  16px — body (minimum for mobile legibility) */
+  --text-md:    1.125rem;  /*  18px — lead paragraph */
+  --text-lg:    1.25rem;   /*  20px — card titles */
+  --text-xl:    1.5rem;    /*  24px — section headings */
+  --text-2xl:   1.875rem;  /*  30px — page headings */
+  --text-3xl:   2.25rem;   /*  36px — hero headings */
+  --text-4xl:   3rem;      /*  48px — display/hero only */
+
+  /* Font Weights */
+  --font-weight-regular:   400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-black:     900;
+
+  /* Line Heights */
+  --leading-tight:    1.2;  /* Headings */
+  --leading-snug:     1.4;  /* Subheadings */
+  --leading-normal:   1.6;  /* Body copy */
+  --leading-relaxed:  1.75; /* Long-form text */
+
+  /* Letter Spacing */
+  --tracking-tight:   -0.02em; /* Large display text */
+  --tracking-normal:   0em;
+  --tracking-wide:     0.04em; /* Labels, caps */
+  --tracking-wider:    0.08em; /* Small caps, badges */
+
+
+/* --------------------------------------------------------------------------
+   SPACING SCALE — 4px base grid
+   -------------------------------------------------------------------------- */
+
+  --space-1:   0.25rem;  /*  4px */
+  --space-2:   0.5rem;   /*  8px */
+  --space-3:   0.75rem;  /* 12px */
+  --space-4:   1rem;     /* 16px */
+  --space-5:   1.25rem;  /* 20px */
+  --space-6:   1.5rem;   /* 24px */
+  --space-8:   2rem;     /* 32px */
+  --space-10:  2.5rem;   /* 40px */
+  --space-12:  3rem;     /* 48px */
+  --space-16:  4rem;     /* 64px */
+  --space-20:  5rem;     /* 80px */
+  --space-24:  6rem;     /* 96px */
+
+  /* Semantic Spacing Aliases */
+  --gap-xs:    var(--space-2);   /*  8px — tight clusters */
+  --gap-sm:    var(--space-3);   /* 12px — compact rows */
+  --gap-md:    var(--space-4);   /* 16px — default gap */
+  --gap-lg:    var(--space-6);   /* 24px — card padding */
+  --gap-xl:    var(--space-8);   /* 32px — section spacing */
+  --gap-2xl:   var(--space-12);  /* 48px — page sections */
+  --gap-3xl:   var(--space-20);  /* 80px — hero sections */
+
+  /* Component-specific */
+  --padding-button-sm:    var(--space-2) var(--space-4);   /* 8px 16px */
+  --padding-button-md:    var(--space-3) var(--space-6);   /* 12px 24px */
+  --padding-button-lg:    var(--space-4) var(--space-8);   /* 16px 32px */
+  --padding-card:         var(--space-6);                  /* 24px all */
+  --padding-input:        var(--space-3) var(--space-4);   /* 12px 16px */
+  --padding-section:      var(--space-12) var(--space-4);  /* 48px 16px (mobile) */
+
+
+/* --------------------------------------------------------------------------
+   BORDER RADIUS
+   -------------------------------------------------------------------------- */
+
+  --radius-sm:    0.25rem;  /*  4px — tags, badges */
+  --radius-md:    0.5rem;   /*  8px — inputs, small cards */
+  --radius-lg:    0.75rem;  /* 12px — cards */
+  --radius-xl:    1rem;     /* 16px — large cards, modals */
+  --radius-2xl:   1.5rem;   /* 24px — pill-shaped containers */
+  --radius-full:  9999px;   /* Full pill — badges, avatars */
+
+
+/* --------------------------------------------------------------------------
+   SHADOWS — Natural depth, not harsh drops
+   -------------------------------------------------------------------------- */
+
+  --shadow-xs:  0 1px 2px rgba(28, 28, 28, 0.06);
+  --shadow-sm:  0 2px 6px rgba(28, 28, 28, 0.08);
+  --shadow-md:  0 4px 12px rgba(28, 28, 28, 0.10);
+  --shadow-lg:  0 8px 24px rgba(28, 28, 28, 0.12);
+  --shadow-xl:  0 16px 48px rgba(28, 28, 28, 0.15);
+
+  /* Focus ring — accessibility */
+  --shadow-focus: 0 0 0 3px rgba(45, 106, 79, 0.40); /* Primary color ring */
+
+
+/* --------------------------------------------------------------------------
+   TRANSITIONS & ANIMATION
+   -------------------------------------------------------------------------- */
+
+  --duration-fast:    120ms;
+  --duration-base:    200ms;
+  --duration-slow:    350ms;
+  --duration-slower:  500ms;
+
+  --ease-default:     cubic-bezier(0.4, 0, 0.2, 1); /* Material standard */
+  --ease-in:          cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:         cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy */
+
+  --transition-base:  var(--duration-base) var(--ease-default);
+  --transition-fast:  var(--duration-fast) var(--ease-default);
+
+
+/* --------------------------------------------------------------------------
+   LAYOUT & BREAKPOINTS
+   -------------------------------------------------------------------------- */
+
+  --breakpoint-sm:    480px;
+  --breakpoint-md:    768px;
+  --breakpoint-lg:    1024px;
+  --breakpoint-xl:    1280px;
+
+  --container-sm:     480px;
+  --container-md:     768px;
+  --container-lg:     1024px;
+  --container-xl:     1280px;
+  --container-max:    1440px;
+
+  /* Z-index scale */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+
+/* --------------------------------------------------------------------------
+   BUTTON COMPONENT — Standardized styles
+   Wagner usability: clear, action-oriented labels
+   -------------------------------------------------------------------------- */
+
+/* Base button reset & shared styles */
+.btn {
+  display:          inline-flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              var(--space-2);
+  font-family:      var(--font-body);
+  font-weight:      var(--font-weight-semibold);
+  letter-spacing:   var(--tracking-wide);
+  text-decoration:  none;
+  border:           2px solid transparent;
+  border-radius:    var(--radius-md);
+  cursor:           pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color     var(--transition-base),
+    color            var(--transition-base),
+    box-shadow       var(--transition-base),
+    transform        var(--transition-fast);
+  white-space:      nowrap;
+  user-select:      none;
+  -webkit-tap-highlight-color: transparent; /* mobile */
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor:  not-allowed;
+  transform: none;
+}
+
+/* --- Sizes --- */
+.btn--sm {
+  padding:   var(--padding-button-sm);
+  font-size: var(--text-sm);
+  min-height: 36px;
+}
+
+.btn--md {
+  padding:   var(--padding-button-md);
+  font-size: var(--text-base);
+  min-height: 44px; /* WCAG touch target minimum */
+}
+
+.btn--lg {
+  padding:   var(--padding-button-lg);
+  font-size: var(--text-md);
+  min-height: 52px;
+}
+
+/* --- Variants --- */
+
+/* Primary — main CTAs e.g. "Select Trail", "Start Hike", "Save Route" */
+.btn--primary {
+  background-color: var(--color-primary);
+  border-color:     var(--color-primary);
+  color:            var(--color-text-inverse);
+}
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  border-color:     var(--color-primary-dark);
+}
+.btn--primary:active:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  box-shadow:       inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Secondary — supporting actions e.g. "Compare Trails", "View Details" */
+.btn--secondary {
+  background-color: transparent;
+  border-color:     var(--color-primary);
+  color:            var(--color-primary);
+}
+.btn--secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-subtle);
+  border-color:     var(--color-primary-dark);
+  color:            var(--color-primary-dark);
+}
+.btn--secondary:active:not(:disabled) {
+  background-color: var(--color-primary-subtle);
+  box-shadow:       inset 0 2px 4px rgba(45,106,79,0.15);
+}
+
+/* Ghost — tertiary actions e.g. "Clear Filters", "Cancel" */
+.btn--ghost {
+  background-color: transparent;
+  border-color:     transparent;
+  color:            var(--color-text-secondary);
+}
+.btn--ghost:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+  color:            var(--color-text-primary);
+}
+.btn--ghost:active:not(:disabled) {
+  background-color: var(--color-neutral-200);
+}
+
+/* Danger — destructive actions e.g. "Remove Trail" */
+.btn--danger {
+  background-color: var(--color-error);
+  border-color:     var(--color-error);
+  color:            var(--color-text-inverse);
+}
+.btn--danger:hover:not(:disabled) {
+  background-color: #9b2c2c;
+  border-color:     #9b2c2c;
+}
+
+/* --- Icon-only button --- */
+.btn--icon {
+  padding:      var(--space-3);
+  border-radius: var(--radius-full);
+  min-height:   44px;
+  min-width:    44px;
+}
+
+
+/* --------------------------------------------------------------------------
+   DIFFICULTY BADGE COMPONENT
+   -------------------------------------------------------------------------- */
+.badge-difficulty {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           var(--space-1);
+  padding:       var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-family:   var(--font-body);
+  font-size:     var(--text-xs);
+  font-weight:   var(--font-weight-bold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.badge-difficulty--easy {
+  background-color: var(--color-primary-subtle);
+  color:            var(--color-primary-dark);
+}
+
+.badge-difficulty--moderate {
+  background-color: var(--color-warning-light);
+  color:            #7a5000;
+}
+
+.badge-difficulty--hard {
+  background-color: var(--color-error-light);
+  color:            var(--color-error);
+}
+
+
+/* --------------------------------------------------------------------------
+   FORM INPUT COMPONENT
+   -------------------------------------------------------------------------- */
+.input {
+  width:            100%;
+  padding:          var(--padding-input);
+  font-family:      var(--font-body);
+  font-size:        var(--text-base); /* min 16px prevents iOS zoom */
+  color:            var(--color-text-primary);
+  background-color: var(--color-bg-sunken);
+  border:           2px solid var(--color-border);
+  border-radius:    var(--radius-md);
+  transition:       border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus {
+  outline:      none;
+  border-color: var(--color-primary);
+  box-shadow:   var(--shadow-focus);
+}
+
+.input:invalid {
+  border-color: var(--color-error);
+}
+
+
+/* --------------------------------------------------------------------------
+   CARD COMPONENT
+   -------------------------------------------------------------------------- */
+.card {
+  background:    var(--color-bg-raised);
+  border-radius: var(--radius-lg);
+  padding:       var(--padding-card);
+  box-shadow:    var(--shadow-sm);
+  border:        1px solid var(--color-border-subtle);
+  transition:    box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform:  translateY(-2px);
+}

@@ -1,22 +1,473 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
 body {
-  background-color: linen;
+  background-color: #eee;
 }
 
-h1 {
-  color: navy;
+header {
+  position: fixed;
+  top: 10px;
+  left: 64px;
+  right: 64px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  border-radius: 100px;
+  z-index: 100;
 }
 
-img{
-  width:300px;
-  height:200px;
-  border:10px solid green;
-  color:white;
-  border-radius:20px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: medium;
 }
 
-figcaption{
-  width: 315px;
-  text-align: left;
-  margin-left: 50px;
+.go-logo {
+  width: 32px;
+}
+
+.navbar ul, .navbar li {
+  display: flex;
+  text-decoration: none;
+  list-style: none;
+  gap: 20px;
+}
+
+.navbar li {
+  font-weight: 100;
+  letter-spacing: 0.5px;
+  color: #606060;
+}
+
+/* Hamburger / nav toggle */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+.nav-toggle:focus { outline: none; }
+.nav-toggle .hamburger,
+.nav-toggle .hamburger::before,
+.nav-toggle .hamburger::after {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #204a20;
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.nav-toggle .hamburger::before,
+.nav-toggle .hamburger::after {
+  content: '';
+  margin-top: 6px;
+}
+
+/* when open, transform to X */
+.nav-toggle[aria-expanded="true"] .hamburger {
+  background: transparent;
+}
+.nav-toggle[aria-expanded="true"] .hamburger::before {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] .hamburger::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.hero-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 50;
+  gap: 36px;
+  color: white;
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.hero-content p {
+  font-size: 18px;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+.search-field {
+  padding: 16px 24px;
+  width: 100%;
+  min-width: 300px;
+  max-width: 800px;
+  border: solid 1px #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+.hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2) 0%, rgba(0, 0, 0, .6) 100%);
+}
+
+.trails-section {
+  margin-top: 64px;
+  padding: 0 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+}
+
+.trail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.trail-header h2 {
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  color: #444;
+}
+
+.trail-header p {
+  font-size: 16px;
+  font-weight: lighter;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  color: #444;
+}
+
+.trail-cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 24px;  
+}
+
+.trail-card {
+  flex: 1 1 300px;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #ddd;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trail-card:hover {
+  border-color: #aaa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.trail-card .trail-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
+}
+
+.trail-card:hover .trail-image {
+  transform: scale(1.08);
+}
+
+.trail-details {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trail-details h3 {
+  font-size: 18px;
+  font-weight: medium;
+  letter-spacing: 0.5px;
+  color: #555;
+}
+.trail-details p {
+  font-size: 14px;
+  font-weight: lighter;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.break {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px;
+  margin-top: 64px;
+  gap: 32px;
+  background-color: rgb(219, 226, 219);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.info-icon {
+  padding: 16px;
+  background-color: rgb(32, 74, 32);
+  color: white;
+  border-radius: 100%;
+}
+
+.info-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-details p{
+  text-align: center;
+}
+
+.reminder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  gap: 24px;
+  background-color: rgb(241, 231, 220);
+  border-radius: 16px;
+  padding: 32px 64px;
+  max-width: 800px;
+  margin-top: 64px;
+  border: solid 1px rgb(197, 136, 66);
+} 
+
+.reminder-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.reminder-details p {
+  font-weight: lighter;
+  text-align: center;
+  letter-spacing: 0.2px;
+  opacity: 0.8;
+}
+
+.shield{
+  color: rgb(58, 81, 58);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(32, 74, 32);
+  margin-top: 128px;
+}
+
+.footer-upper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 36px 64px;
+}
+
+/* -------------------------
+   Responsive adjustments
+   ------------------------- */
+
+@media (max-width: 1024px) {
+  .hero-content h1 {
+    font-size: 40px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
+  }
+
+  .trail-header h2 {
+    font-size: 22px;
+  }
+
+  .trail-cards {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    position: static;
+    margin: 16px;
+    left: auto;
+    right: auto;
+    border-radius: 12px;
+    padding: 8px 16px;
+  }
+
+  .brand {
+    font-size: 18px;
+    gap: 8px;
+  }
+
+  .go-logo {
+    width: 28px;
+  }
+
+  .navbar {
+    width: calc(100% - 32px);
+    margin-top: 8px;
+    /* hidden by default and animated as a slide from above */
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: calc(100% + 8px);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    transform: translateY(-12px);
+    transition: transform 260ms var(--ease-out), opacity 200ms ease;
+    opacity: 0;
+    z-index: 250;
+    overflow: hidden;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .navbar.open, .navbar[aria-hidden="false"] {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .nav-toggle { display: inline-flex; align-items: center; }
+
+  .hero-section {
+    min-height: 60vh;
+    padding-top: 24px;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+    text-align: center;
+  }
+
+  .hero-content p {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .search-field {
+    padding: 12px 16px;
+    min-width: 0;
+    max-width: 92%;
+    width: 92%;
+  }
+
+  .trail-cards {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .trail-card {
+    flex: none;
+    width: 100%;
+  }
+
+  .break {
+    padding: 32px 16px;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .reminder {
+    padding: 20px 20px;
+    max-width: 100%;
+    margin-top: 32px;
+  }
+
+  .footer-upper {
+    flex-direction: column;
+    padding: 24px 20px;
+    gap: 20px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 24px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+  }
+
+  .brand p { display: none; }
+
+  header { padding: 8px 12px; }
+
+  .go-logo { width: 26px; }
+
+  .trail-details h3 { font-size: 16px; }
+  .trail-details p  { font-size: 13px; }
+
+  .reminder { padding: 16px; }
+  .break { padding: 20px 12px; }
 }
